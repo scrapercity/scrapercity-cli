@@ -121,7 +121,7 @@ Buy additional credits anytime. [scrapercity.com/pricing](https://scrapercity.co
 - [Agent Docs](https://scrapercity.com/agents) - setup guide
 - [API Reference](https://scrapercity.com/api-docs) - full documentation
 - [Skill File](https://scrapercity.com/agents/SKILL.md) - for Claude Code
-- [MCP Server Listing](https://scrapercity.com/agents/mcp) - configuration
+- [MCP Server Listing](https://scrapercity.com/agents) - configuration
 
 ## License
 
