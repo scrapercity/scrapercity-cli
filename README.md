@@ -1,6 +1,6 @@
-# ScraperCity — B2B Lead Generation for AI Agents
+# ScraperCity - B2B Lead Generation for AI Agents
 
-Pull leads, validate emails, find mobile numbers, and scrape business data — all from your AI agent, CLI, or code.
+Pull leads, validate emails, find mobile numbers, and scrape business data - all from your AI agent, CLI, or code.
 
 ScraperCity gives AI agents access to 15+ B2B data tools: Apollo scraping, Google Maps extraction, email finding/validation, mobile number lookup, skip tracing, ecommerce store data, criminal records, and more.
 
@@ -118,10 +118,10 @@ Buy additional credits anytime. [scrapercity.com/pricing](https://scrapercity.co
 
 ## Links
 
-- [Agent Docs](https://scrapercity.com/agents) — setup guide
-- [API Reference](https://scrapercity.com/api-docs) — full documentation
-- [Skill File](https://scrapercity.com/agents/SKILL.md) — for Claude Code
-- [MCP Server Listing](https://scrapercity.com/agents/mcp) — configuration
+- [Agent Docs](https://scrapercity.com/agents) - setup guide
+- [API Reference](https://scrapercity.com/api-docs) - full documentation
+- [Skill File](https://scrapercity.com/agents/SKILL.md) - for Claude Code
+- [MCP Server Listing](https://scrapercity.com/agents/mcp) - configuration
 
 ## License
 

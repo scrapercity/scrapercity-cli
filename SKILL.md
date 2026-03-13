@@ -1,4 +1,4 @@
-# ScraperCity — B2B Lead Generation
+# ScraperCity - B2B Lead Generation
 
 ## Setup
 ```bash
@@ -62,12 +62,12 @@ Apollo scrapes take **up to 4 days** to deliver. Do NOT poll in a loop.
 `RUNNING` → `SUCCEEDED` or `FAILED` or `CANCELLED`
 
 ## Error Codes
-- `401` — bad or missing API key
-- `402` — insufficient balance (check wallet first)
-- `403` — account cancelled or charge processing
-- `409` — duplicate request (same search submitted recently)
-- `429` — rate limited / duplicate within 30s
-- `503` — service temporarily unavailable
+- `401` - bad or missing API key
+- `402` - insufficient balance (check wallet first)
+- `403` - account cancelled or charge processing
+- `409` - duplicate request (same search submitted recently)
+- `429` - rate limited / duplicate within 30s
+- `503` - service temporarily unavailable
 
 ## CLI Shorthand
 ```bash
@@ -87,7 +87,7 @@ scrapercity download <runId>      # saves CSV
 
 ## Tips
 - Always check `wallet` before large scrapes to avoid 402 errors
-- Apollo URL must be from apollo.io People search — other pages rejected
+- Apollo URL must be from apollo.io People search - other pages rejected
 - Maps: split large metro areas into sub-cities for better coverage
 - Email validator: dedupes automatically, only charges for unique emails
 - Store leads: zero COGS (cached DB), instant results

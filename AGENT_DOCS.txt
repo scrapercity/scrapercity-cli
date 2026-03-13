@@ -1,4 +1,4 @@
-SCRAPERCITY API REFERENCE — FOR AI AGENTS
+SCRAPERCITY API REFERENCE - FOR AI AGENTS
 ==========================================
 
 BASE: https://app.scrapercity.com
@@ -154,7 +154,7 @@ GET /api/v1/runs?hours=24&limit=50
   Returns: { runs: [{ run_id, status, handled, url, file_name, created_at }] }
 
 GET /api/v1/apollo-status
-  Returns: { useApify, message } — check if Apollo URL endpoint is available
+  Returns: { useApify, message } - check if Apollo URL endpoint is available
 
 ────────────────────────────────────────
 DATABASES (GET, $649 plan only, 100k/day)

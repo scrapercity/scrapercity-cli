@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// bin/mcp.mjs — ScraperCity MCP Server (stdio transport)
+// bin/mcp.mjs - ScraperCity MCP Server (stdio transport)
 // Connect from Claude Code / Cursor / any MCP client
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
@@ -44,7 +44,7 @@ const TOOLS = [
   },
   {
     name: 'scrape_apollo_filters',
-    description: 'Scrape leads from Apollo.io using filter parameters instead of a URL. Same 4-day delivery — use webhooks. At least one filter required.',
+    description: 'Scrape leads from Apollo.io using filter parameters instead of a URL. Same 4-day delivery - use webhooks. At least one filter required.',
     inputSchema: {
       type: 'object',
       properties: {

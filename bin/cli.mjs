@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// bin/cli.mjs — ScraperCity CLI
+// bin/cli.mjs - ScraperCity CLI
 import * as sc from '../lib/client.mjs'
 import fs from 'fs'
 import readline from 'readline'
@@ -247,7 +247,7 @@ async function main() {
         }
         if (!params.totalLeads) params.totalLeads = 1000
         const r = await sc.storeLeads(params)
-        console.log(`✓ Store leads started — ${r.totalLeads || 'N/A'} leads`)
+        console.log(`✓ Store leads started - ${r.totalLeads || 'N/A'} leads`)
         console.log(`  Run ID: ${r.runId}`)
         console.log(`  Est. cost: $${r.estimatedCost?.toFixed(2) || 'N/A'}`)
         console.log(`  Poll: scrapercity status ${r.runId}`)
@@ -448,7 +448,7 @@ async function main() {
         console.log(`Polling ${args[0]} every ${interval / 1000}s...`)
         const result = await sc.pollUntilDone(args[0], {
           interval,
-          onStatus: (s) => process.stdout.write(`\r  ${s.status} — ${s.handled}/${s.requested} leads`)
+          onStatus: (s) => process.stdout.write(`\r  ${s.status} - ${s.handled}/${s.requested} leads`)
         })
         console.log(`\n✓ Done: ${result.handled} leads`)
         console.log(`  Download: scrapercity download ${args[0]}`)
@@ -458,7 +458,7 @@ async function main() {
       // ── Help ──────────────────────────────────────────────
       case 'help': case '--help': case '-h': case undefined: {
         console.log(`
-ScraperCity CLI — B2B lead generation from your terminal
+ScraperCity CLI - B2B lead generation from your terminal
 
   Auth:
     scrapercity login [key]                  Save API key to ~/.scrapercityrc
