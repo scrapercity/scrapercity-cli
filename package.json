@@ -1,6 +1,6 @@
 {
   "name": "scrapercity",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "ScraperCity CLI & MCP Server - B2B lead generation for AI agents",
   "type": "module",
   "bin": {
@@ -15,16 +15,30 @@
     "README.md"
   ],
   "keywords": [
-    "scrapercity", "mcp", "mcp-server", "lead-generation", "b2b",
-    "scraping", "apollo", "google-maps", "email-finder", "ai-agent",
-    "claude-code", "cursor"
+    "scrapercity",
+    "mcp",
+    "mcp-server",
+    "lead-generation",
+    "b2b",
+    "scraping",
+    "apollo",
+    "google-maps",
+    "email-finder",
+    "ai-agent",
+    "claude-code",
+    "cursor"
   ],
   "author": "ScraperCity",
   "license": "MIT",
   "homepage": "https://scrapercity.com/agents",
-  "repository": { "type": "git", "url": "https://github.com/scrapercity/scrapercity-cli" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scrapercity/scrapercity-cli"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }
