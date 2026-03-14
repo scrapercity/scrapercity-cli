@@ -25,7 +25,7 @@ Add to your MCP config (e.g. `~/.claude/claude_desktop_config.json`):
   "mcpServers": {
     "scrapercity": {
       "command": "npx",
-      "args": ["-y", "scrapercity-mcp"],
+      "args": ["-y", "--package", "scrapercity", "scrapercity-mcp"],
       "env": {
         "SCRAPERCITY_API_KEY": "your_api_key_here"
       }
