@@ -1,6 +1,6 @@
 {
   "name": "scrapercity",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ScraperCity CLI & MCP Server - B2B lead generation for AI agents",
   "type": "module",
   "bin": {
