@@ -1,21 +1,4 @@
 {
-  "name": "scrapercity-cli",
-  "display_name": "ScraperCity",
-  "description": "B2B lead generation MCP server with 20+ tools including Apollo, Google Maps, email finder, email validator, mobile finder, skip trace, and ecommerce store data.",
-  "homepage": "https://scrapercity.com/agents",
-  "categories": ["web-scraping", "marketing", "search"],
-  "installation": {
-    "npx": "npx -y scrapercity"
-  },
-  "configuration": {
-    "mcpServers": {
-      "scrapercity": {
-        "command": "npx",
-        "args": ["-y", "scrapercity"],
-        "env": {
-          "SCRAPERCITY_API_KEY": "your-api-key"
-        }
-      }
-    }
-  }
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["scrapercity"]
 }
