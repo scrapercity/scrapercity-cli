@@ -31,7 +31,7 @@ const TOOLS = [
   },
   {
     name: 'scrape_apollo',
-    description: 'Scrape leads from Apollo.io using a search URL. IMPORTANT: Apollo delivery takes up to 4 days. Use webhooks (configure at app.scrapercity.com/dashboard/webhooks) instead of polling. Returns a runId to check status later.',
+    description: 'Scrape leads from Apollo.io using a search URL. IMPORTANT: Apollo delivery takes 11-48+ hours. Use webhooks (configure at app.scrapercity.com/dashboard/webhooks) instead of polling. Returns a runId to check status later.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -381,11 +381,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         break
       case 'scrape_apollo':
         result = await sc.apollo(args.url, args.count || 1000, args.fileName || '')
-        result._note = 'Apollo takes up to 4 days. Configure webhook at app.scrapercity.com/dashboard/webhooks instead of polling.'
+        result._note = 'Apollo takes 11-48+ hours. Configure webhook at app.scrapercity.com/dashboard/webhooks instead of polling.'
         break
       case 'scrape_apollo_filters':
         result = await sc.apolloFilters(args)
-        result._note = 'Apollo takes up to 4 days. Configure webhook at app.scrapercity.com/dashboard/webhooks instead of polling.'
+        result._note = 'Apollo takes 11-48+ hours. Configure webhook at app.scrapercity.com/dashboard/webhooks instead of polling.'
         break
       case 'scrape_maps':
         result = await sc.maps(args.query, args.location, args.limit || 500)

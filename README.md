@@ -87,7 +87,7 @@ curl -O https://app.scrapercity.com/api/downloads/RUN_ID \
 2. **Poll status** (or use webhooks) → wait for `SUCCEEDED`
 3. **Download CSV** → leads with full contact info
 
-Apollo scrapes take up to 4 days. All other scrapers: 1-30 minutes. Store leads are instant.
+Apollo scrapes take 11-48+ hours. All other scrapers: 1-30 minutes. Store leads are instant.
 
 ## Authentication
 
