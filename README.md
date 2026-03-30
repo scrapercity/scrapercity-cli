@@ -4,6 +4,10 @@ Pull leads, validate emails, find mobile numbers, and scrape business data - all
 
 ScraperCity gives AI agents access to 15+ B2B data tools: Apollo scraping, Google Maps extraction, email finding/validation, mobile number lookup, skip tracing, ecommerce store data, criminal records, and more.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/scrapercity-scrapercity-cli).
+
 ## Quick Start
 
 ### Option 1: CLI
