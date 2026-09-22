@@ -21,18 +21,19 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | Tool | Endpoint | Price |
 |------|----------|-------|
 | `scrape_apollo` | /api/v1/scrape/apollo | $0.0039 per lead |
-| `scrape_website_finder` | /api/v1/scrape/website-finder | $0.05 per contact found |
+| `scrape_website_finder` | /api/v1/scrape/website-finder | $0.0499 per contact found |
 | `find_people` | /api/v1/scrape/skip-trace | $0.0199 per result (searches with 0 matches are billed as 1 result) |
 | `scrape_distress_list` | /api/v1/scrape/distress-list | $0.05 per property |
 | `validate_emails` | /api/v1/scrape/email-validator | $0.0072 per email |
-| `scrape_maps` | /api/v1/scrape/maps | $0.0099 per business |
+| `scrape_maps` | /api/v1/scrape/maps | $0.01 per business |
 | `scrape_airbnb` | /api/v1/scrape/airbnb-email | $0.019 per result ($19.00 per 1,000) |
-| `scrape_bizbuysell` | /api/v1/scrape/bizbuysell-scraper | $0.01 per listing |
+| `scrape_bizbuysell` | /api/v1/scrape/bizbuysell-scraper | $0.0099 per listing |
 | `scrape_crexi` | /api/v1/scrape/crexi-scraper | $0.029 per property |
-| `scrape_angi` | /api/v1/scrape/angi-angies-list-scraper | $0.01 per listing |
-| `scrape_yelp` | /api/v1/scrape/yelp-scraper | $0.01 per result |
+| `scrape_angi` | /api/v1/scrape/angi-angies-list-scraper | $0.0099 per listing |
+| `scrape_yelp` | /api/v1/scrape/yelp-scraper | $0.0099 per result |
 | `scrape_zillow_agents` | /api/v1/scrape/zillow-agents | $0.029 per agent |
-| `search_criminal_records` | /api/v1/scrape/criminal-records | $1.00 per search (only charged if records found) |
+| `scrape_property_lookup` | /api/v1/scrape/property-lookup | $0.15 per property (+$0.10 for owner contact) |
+| `search_criminal_records` | /api/v1/scrape/criminal-records | .00 per search (only charged if records found) |
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |

@@ -40,12 +40,62 @@ const toolName = (key) => NAME_OVERRIDE[key] || 'scrape_' + key.replace(/-/g, '_
 
 // ── Live-registry cross-check config ──────────────────────────
 const SPECIAL_HANDLERS = ['criminal-records', 'email-finder', 'mobile-finder'] // live, not in registry
-const RETIRED = ['apollo-filters']         // handler returns 503 — not live
-const DASHBOARD_ONLY = ['property-lookup']  // in registry but /api/v1/ throws (needs dashboard orchestration)
+const RETIRED = ['apollo-filters']  // handler returns 503 — intentionally disabled, not in the config
+// Scrapers that are real products but whose PUBLIC /api/v1/ path is currently broken
+// (works in the dashboard, throws "Launch failed" over the API — e.g. yelp, property-lookup).
+// These still SHIP as tools: the MCP is a projection of the config, and they self-heal the
+// moment the API (or the docs) is fixed in phase 2. NOT removed — a v1 failure is an app bug
+// to fix, not a dead scraper. So this exclusion list is intentionally empty.
+const DASHBOARD_ONLY = []
 const SLUG_ALIAS = { 'skip-trace': 'people-finder', 'techstack': 'builtwith' }
 const canon = (s) => SLUG_ALIAS[s] || s
 // Canonical products that are NOT POST /api/v1/scrape/ scrapers (excluded from tools).
 const NON_SCRAPER = ['buy-credits', 'database-leads', 'database-enrichment', 'database-local-businesses', 'database-ecommerce']
+
+// ── Price source of truth = the PRICE_PER_*_MICRO env vars ─────
+// The backend charges from these (generic path via registry.priceEnv, special handlers
+// via their own reads). So the MCP price is DERIVED from the env, and doc prices are
+// validated against it. Registry scrapers use registry[key].priceEnv; the rest map here.
+const SPECIAL_PRICE_ENV = {
+  'email-finder': 'PRICE_PER_EMAIL_FINDER_MICRO',
+  'mobile-finder': 'PRICE_PER_MOBILE_FINDER_MICRO',
+}
+const FIXED_PRICE_MICRO = { 'criminal-records': 1000000 } // handler-hardcoded $1.00
+
+function loadEnv() {
+  const cands = [
+    process.env.SCRAPERCITY_ENV,
+    path.resolve(ROOT, '../scrapercity/.env.local'),
+    path.resolve(ROOT, '../../scrapercity/.env.local'),
+  ].filter(Boolean)
+  for (const c of cands) {
+    if (!fs.existsSync(c)) continue
+    const m = {}
+    for (const line of fs.readFileSync(c, 'utf-8').split('\n')) {
+      const mm = /^\s*(PRICE_PER_[A-Z0-9_]+)\s*=\s*(\d+)/.exec(line)
+      if (mm) m[mm[1]] = parseInt(mm[2], 10)
+    }
+    return { path: c, env: m }
+  }
+  return { path: null, env: {} }
+}
+function priceMicroForKey(key, registry, env) {
+  const reg = registry[key] && registry[key].priceEnv
+  if (reg && env[reg] != null) return env[reg]
+  const sp = SPECIAL_PRICE_ENV[key]
+  if (sp && env[sp] != null) return env[sp]
+  if (FIXED_PRICE_MICRO[key] != null) return FIXED_PRICE_MICRO[key]
+  return null
+}
+const fmtDollars = (micro) => ('$' + (micro / 1_000_000).toFixed(4)).replace(/0+$/, '').replace(/\.$/, '')
+function formatEnvPrice(configPrice, micro) {
+  const s = fmtDollars(micro)
+  return /\$[\d,]+(\.\d+)?/.test(configPrice) ? configPrice.replace(/\$[\d,]+(\.\d+)?/, s) : `${s} (${configPrice})`
+}
+function parsePriceMicro(configPrice) {
+  const mm = /\$([\d,]+(?:\.\d+)?)/.exec(configPrice || '')
+  return mm ? Math.round(parseFloat(mm[1].replace(/,/g, '')) * 1_000_000) : null
+}
 
 // ── Load a TS data module by stripping its types ──────────────
 async function loadTs(file, exportName, stripAnnotation) {
@@ -113,6 +163,8 @@ async function main() {
     '  Reconcile scraperConfigs.ts with the registry.')
 
   // Build the generated tool defs + endpoint map — a pure projection of the config.
+  const { path: envPath, env: ENVMAP } = loadEnv()
+  const priceMismatches = []
   const TOOLS = []
   const ENDPOINT_BY_TOOL = {}
   const names = new Set()
@@ -126,8 +178,17 @@ async function main() {
       properties[p.name] = paramSchema(p)
       if (p.required) required.push(p.name)
     }
+    // Price: derive from the env micro (source of truth); fall back to the doc price.
+    const micro = priceMicroForKey(key, registry, ENVMAP)
+    const displayPrice = micro != null ? formatEnvPrice(c.price, micro) : c.price
+    if (micro != null) {
+      const docMicro = parsePriceMicro(c.price)
+      if (docMicro != null && docMicro !== micro) {
+        priceMismatches.push(`${key}: docs "${c.price}" (${fmtDollars(docMicro)}) vs charged ${fmtDollars(micro)} — fix the doc price`)
+      }
+    }
     const plan = planNote(c.price)
-    const cost = plan ? `Included with the ${plan} plan.` : `Cost: ${c.price}.`
+    const cost = plan ? `Included with the ${plan} plan.` : `Cost: ${displayPrice}.`
     const tool = {
       name,
       description: `${(c.description || c.name).trim()} ${cost}`,
@@ -136,6 +197,7 @@ async function main() {
     TOOLS.push(tool)
     ENDPOINT_BY_TOOL[name] = c.endpoint
   }
+  log(envPath ? `prices sourced from ${envPath}` : 'WARNING: no .env.local found — MCP prices fell back to scraperConfigs display values')
 
   // ENDPOINTS (by config slug) — still used by the CLI's per-command client fns.
   const ENDPOINTS = {}
@@ -171,6 +233,10 @@ async function main() {
 
   log('non-scraper canonical products (not exposed as scraper tools):')
   for (const k of NON_SCRAPER) if (cfg[k]) log(`   - ${k} (${cfg[k].name})`)
+  if (priceMismatches.length) {
+    log('PRICE MISMATCH — scraperConfigs docs disagree with the charged (env) price:')
+    for (const m of priceMismatches) log(`   ! ${m}`)
+  }
   if (DASHBOARD_ONLY.length) {
     log('DASHBOARD-ONLY — live in the registry but NOT usable over /api/v1/ yet:')
     for (const s of DASHBOARD_ONLY) log(`   ! ${s}  <-- re-appears in the MCP automatically once it works over /api/v1/ and is put back in scraperConfigs.ts`)
