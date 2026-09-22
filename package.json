@@ -36,9 +36,13 @@
     "url": "https://github.com/scrapercity/scrapercity-cli"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.30.0"
   },
   "engines": {
     "node": ">=18"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "prepublishOnly": "node scripts/generate.mjs --check"
   }
 }

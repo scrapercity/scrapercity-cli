@@ -97,40 +97,6 @@ async function main() {
         break
       }
 
-      // ── Apollo Filters ────────────────────────────────────
-      case 'apollo-filters': {
-        const filters = {}
-        for (const f of ['--seniority', '--function', '--industry', '--country', '--state',
-                         '--company-country', '--company-state', '--company-size', '--count', '--name', '--has-phone']) {
-          const v = flag(f)
-          if (v === undefined) continue
-          const key = {
-            '--seniority': 'seniorityLevel', '--function': 'functionDept',
-            '--industry': 'companyIndustry', '--country': 'personCountry',
-            '--state': 'personState', '--company-country': 'companyCountry',
-            '--company-state': 'companyState', '--company-size': 'companySize',
-            '--count': 'count', '--name': 'fileName', '--has-phone': 'hasPhone'
-          }[f]
-          filters[key] = f === '--has-phone' ? true : (f === '--count' ? +v : v)
-        }
-        // Array flags
-        for (const f of ['--titles', '--domains', '--keywords', '--person-cities', '--company-cities']) {
-          const v = flag(f)
-          if (!v) continue
-          const key = { '--titles': 'personTitles', '--domains': 'companyDomains',
-                        '--keywords': 'companyKeywords', '--person-cities': 'personCities',
-                        '--company-cities': 'companyCities' }[f]
-          filters[key] = v.split(',').map(s => s.trim())
-        }
-        if (!Object.keys(filters).length) die('At least one filter required. Example: scrapercity apollo-filters --industry "computer software" --country "United States" --count 1000')
-        const r = await sc.apolloFilters(filters)
-        console.log(`✓ Apollo filter search started`)
-        console.log(`  Run ID: ${r.runId}`)
-        console.log(`  ${r.message || ''}`)
-        console.log(`  Note: Apollo takes up to 4 days. Set up a webhook to get notified.`)
-        break
-      }
-
       // ── Maps ──────────────────────────────────────────────
       case 'maps': {
         const query = flag('--query') || flag('-q')
@@ -300,21 +266,6 @@ async function main() {
         break
       }
 
-      // ── YouTube Email ─────────────────────────────────────
-      case 'youtube-email': {
-        let channels = args.filter(a => !a.startsWith('-'))
-        const file = flag('--file')
-        if (file) {
-          channels = [...channels, ...fs.readFileSync(file, 'utf-8').split('\n').map(l => l.trim()).filter(Boolean)]
-        }
-        if (!channels.length) die('Usage: scrapercity youtube-email @ChannelHandle https://youtube.com/@Channel  OR  --file channels.txt')
-        const r = await sc.youtubeEmail(channels)
-        console.log(`✓ YouTube email scrape started`)
-        console.log(`  Run ID: ${r.runId}`)
-        console.log(`  Poll: scrapercity status ${r.runId}`)
-        break
-      }
-
       // ── Website Finder ────────────────────────────────────
       case 'website-finder': {
         let domains = args.filter(a => !a.startsWith('-'))
@@ -400,17 +351,15 @@ async function main() {
         break
       }
 
-      // ── Property Lookup ───────────────────────────────────
-      case 'property-lookup': {
-        let addresses = args.filter(a => !a.startsWith('-'))
-        const file = flag('--file')
-        const ownerContact = flagBool('--owner-contact')
-        if (file) {
-          addresses = [...addresses, ...fs.readFileSync(file, 'utf-8').split('\n').map(l => l.trim()).filter(Boolean)]
-        }
-        if (!addresses.length) die('Usage: scrapercity property-lookup "123 Main St, Denver, CO 80202" [--owner-contact] OR --file addresses.txt')
-        const r = await sc.propertyLookup(addresses, ownerContact)
-        console.log(`✓ Property lookup started for ${addresses.length} addresses`)
+      // ── Deal Finder (distressed properties) ───────────────
+      case 'distress-list': {
+        const search = args.find(a => !a.startsWith('-'))
+        if (!search) die('Usage: scrapercity distress-list "Tampa, FL" [--types preForeclosure,auction] [--max 100]')
+        const body = { search }
+        const types = flag('--types'); if (types) body.distressTypes = types.split(',').map(s => s.trim())
+        const max = flag('--max'); if (max) body.maxItems = +max
+        const r = await sc.distressList(body)
+        console.log(`✓ Deal Finder scrape started`)
         console.log(`  Run ID: ${r.runId}`)
         console.log(`  Poll: scrapercity status ${r.runId}`)
         break
@@ -466,7 +415,6 @@ ScraperCity CLI - B2B lead generation from your terminal
 
   Scrapers:
     scrapercity apollo <url> [--count N]     Apollo scrape (URL-based, ~4 day delivery)
-    scrapercity apollo-filters [filters]     Apollo scrape (filter-based)
     scrapercity maps -q <query> -l <loc>     Google Maps scrape
     scrapercity email-validate <emails>      Validate email addresses
     scrapercity email-find --first X --last Y --domain Z    Find business emails
@@ -476,14 +424,13 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity builtwith "Technology"       Sites using a technology
     scrapercity criminal --name "X"          Criminal records search
     scrapercity airbnb --city "Miami, FL"    Airbnb host emails
-    scrapercity youtube-email @Channel       YouTuber business emails
     scrapercity website-finder acme.com      Contact info from domains
     scrapercity yelp -q "query" -l "City"    Yelp business scraper
     scrapercity angi -q "query" --zips X     Angi (Angie's List) scraper
     scrapercity zillow-agents -l "City"      Zillow real estate agents
     scrapercity bizbuysell <url>             BizBuySell listings
     scrapercity crexi <url>                  Crexi commercial real estate
-    scrapercity property-lookup "address"    Property data + owner contact
+    scrapercity distress-list \"City, ST\"   Distressed / motivated-seller properties
 
   Status:
     scrapercity status <runId>               Check run status
