@@ -174,9 +174,25 @@ async function main() {
     if (names.has(name)) fail(`Duplicate generated tool name "${name}" (key ${key}). Add a NAME_OVERRIDE.`)
     names.add(name)
     const properties = {}, required = []
+    const nested = []
     for (const p of (c.parameters || [])) {
+      // `parent[].child` rows document the fields of an array-of-objects param. They are NOT
+      // top-level properties: a key like "contacts[].first_name" breaks the MCP property-name rule
+      // (^[a-zA-Z0-9_.-]{1,64}$) and clients drop the whole tool (find_emails vanished this way).
+      if (/^[^\[]+\[\]\./.test(p.name)) { nested.push(p); continue }
       properties[p.name] = paramSchema(p)
       if (p.required) required.push(p.name)
+    }
+    for (const p of nested) {
+      const [parent, child] = p.name.split('[].')
+      const arr = properties[parent]
+      if (!arr || arr.type !== 'array') fail(`${key}: "${p.name}" documents a field of "${parent}", which is not an array param`)
+      if (!arr.items || arr.items.type !== 'object') arr.items = { type: 'object' }
+      arr.items.properties = arr.items.properties || {}
+      arr.items.properties[child] = paramSchema(p)
+    }
+    for (const k of Object.keys(properties)) {
+      if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(k)) fail(`${key}: property name "${k}" is not a valid MCP property name`)
     }
     // Price: derive from the env micro (source of truth); fall back to the doc price.
     const micro = priceMicroForKey(key, registry, ENVMAP)

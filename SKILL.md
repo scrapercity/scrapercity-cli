@@ -79,9 +79,9 @@ Apollo scrapes take **up to 4 days** to deliver. Do NOT poll in a loop.
 | POST | `/api/v1/scrape/cancel/{runId}` | Cancel running job |
 | GET | `/api/v1/scrape/logs/{runId}` | Run logs |
 | GET | `/api/v1/apollo-status` | Apollo service health |
-| GET | `/api/v1/database/leads?title=CTO&country=US&hasEmail=true&page=1&limit=100` | Lead DB ($649 plan, 100k/day) |
-| GET | `/api/v1/database/local-businesses?...` | Local biz DB ($649 plan) |
-| GET | `/api/v1/database/ecommerce?...` | Ecommerce DB ($649 plan) |
+| GET | `/api/v1/database/leads?title=CTO&country=United%20States&hasEmail=true&limit=100` | Lead DB ($149/mo plan and up, 100k new leads/day). Optional: `excludeDelivered=true` (only leads you don't have yet), `after=0` then `pagination.next_after` (cursor paging) |
+| GET | `/api/v1/database/local-businesses?...` | Local biz DB ($149/mo plan and up). Same optional `excludeDelivered` / `after` |
+| GET | `/api/v1/database/ecommerce?...` | Ecommerce DB ($149/mo plan and up). Same optional `excludeDelivered` / `after` |
 
 ## Status Values
 `RUNNING` → `SUCCEEDED` or `FAILED` or `CANCELLED`

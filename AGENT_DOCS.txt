@@ -183,18 +183,25 @@ GET /api/v1/apollo-status
   Returns: { useApify, message } - check if Apollo URL endpoint is available
 
 ────────────────────────────────────────
-DATABASES (GET, $649 plan only, 100k/day)
+DATABASES (GET, $149/mo plan and up, 100k new records/day)
 ────────────────────────────────────────
 
 GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&limit=100
   Filters: title, industry, country, state, city, companyName, companyDomain,
-           companySize, seniority, department, hasEmail, hasPhone, minEmployees, maxEmployees
+           seniority, department, hasEmail, hasPhone, minEmployees, maxEmployees, socialUrl
   Array params use repeated keys: ?seniority=vp&seniority=director
-  Returns: { data: [...leads], pagination: { page, limit, total, totalPages } }
+  Optional:
+    excludeDelivered=true  skip leads this account already has (from the API or the
+                           dashboard). For daily pulls. Keep page=1 (or use after).
+    after=<id>             cursor paging in id order. Send after=0 first, then
+                           pagination.next_after from each response until it is null.
+  Every lead returned is saved to your account. Only NEW leads count toward the
+  100k/day limit; fetching a lead you already have again is free.
+  Returns: { data: [...leads], pagination: { page, limit, total, totalPages, has_more, next_after }, rate_limit }
 
 GET /api/v1/database/local-businesses?...
 GET /api/v1/database/ecommerce?...
-  Same pattern, different datasets.
+  Same pattern (including excludeDelivered and after), different datasets.
 
 ────────────────────────────────────────
 ERROR CODES

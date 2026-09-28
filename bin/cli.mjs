@@ -365,12 +365,12 @@ async function main() {
         break
       }
 
-      // ── Database: Leads ($649) ────────────────────────────
+      // ── Database: Leads ($149/mo plan and up) ─────────────
       case 'db-leads': {
         const params = {}
         for (const f of ['--title', '--industry', '--country', '--state', '--city',
                          '--company', '--domain', '--company-size', '--seniority',
-                         '--department', '--page', '--limit', '--min-employees', '--max-employees']) {
+                         '--department', '--page', '--limit', '--min-employees', '--max-employees', '--after']) {
           const v = flag(f)
           if (v === undefined) continue
           const key = { '--title': 'title', '--industry': 'industry', '--country': 'country',
@@ -378,13 +378,16 @@ async function main() {
                         '--domain': 'companyDomain', '--company-size': 'companySize',
                         '--seniority': 'seniority', '--department': 'department',
                         '--page': 'page', '--limit': 'limit',
-                        '--min-employees': 'minEmployees', '--max-employees': 'maxEmployees' }[f]
+                        '--min-employees': 'minEmployees', '--max-employees': 'maxEmployees',
+                        '--after': 'after' }[f]
           params[key] = v
         }
         if (flagBool('--has-email')) params.hasEmail = 'true'
         if (flagBool('--has-phone')) params.hasPhone = 'true'
+        if (flagBool('--exclude-delivered')) params.excludeDelivered = 'true'
         const r = await sc.dbLeads(params)
         console.log(`${r.pagination?.total || '?'} total leads, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
+        if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
         console.log(json(r.data?.slice(0, 3) || r))
         if (r.data?.length > 3) console.log(`... and ${r.data.length - 3} more`)
         break
@@ -440,8 +443,10 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity logs <runId>                 View run logs
     scrapercity runs [--hours 24]            List recent runs
 
-  Database ($649 plan):
+  Database ($149/mo plan and up):
     scrapercity db-leads [filters]           Query lead database
+      --exclude-delivered                    Only leads you don't already have
+      --after <id>                           Cursor paging (start with 0, then use the printed next id)
 
   Env: SCRAPERCITY_API_KEY=...  or  scrapercity login
   Docs: https://scrapercity.com/agents

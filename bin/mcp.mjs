@@ -50,7 +50,7 @@ const UTILITY_TOOLS = [
   },
   {
     name: 'query_lead_database',
-    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies. 100 per request, paginate with page param. Included with the $149/mo plan.',
+    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies. Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null.',
     inputSchema: { type: 'object', properties: {
       title: { type: 'string', description: 'Job title filter' },
       industry: { type: 'string', description: 'Company industry' },
@@ -64,7 +64,9 @@ const UTILITY_TOOLS = [
       hasEmail: { type: 'boolean', description: 'Only contacts with email' },
       hasPhone: { type: 'boolean', description: 'Only contacts with phone' },
       page: { type: 'number', description: 'Page number (default 1)', default: 1 },
-      limit: { type: 'number', description: 'Results per page (max 100)', default: 50 }
+      limit: { type: 'number', description: 'Results per page (max 100)', default: 50 },
+      excludeDelivered: { type: 'boolean', description: 'Skip leads this account already has (from the API or unlocked in the dashboard). With this on, keep page at 1 or use after.' },
+      after: { type: 'string', description: 'Cursor paging: return leads after this lead id. Use "0" to start, then the pagination.next_after from each response.' }
     } }
   }
 ]
@@ -95,6 +97,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           const params = { ...args }
           if (params.hasEmail) params.hasEmail = 'true'
           if (params.hasPhone) params.hasPhone = 'true'
+          if (params.excludeDelivered) params.excludeDelivered = 'true'
+          else delete params.excludeDelivered
+          if (params.after !== undefined && params.after !== null) params.after = String(params.after)
           result = await sc.dbLeads(params)
           break
         }
