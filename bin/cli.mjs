@@ -5,7 +5,9 @@ import fs from 'fs'
 import readline from 'readline'
 
 const [,, cmd, ...args] = process.argv
-const flag = (name) => { const i = args.indexOf(name); return i !== -1 ? (args.splice(i, 2), args[i] || true) : undefined }
+// Read "--name value" and remove both from args. (It used to splice first and then read
+// args[i], which by then was the NEXT flag, so every value flag got the wrong value.)
+const flag = (name) => { const i = args.indexOf(name); if (i === -1) return undefined; const v = args[i + 1]; args.splice(i, 2); return v ?? true }
 const flagBool = (name) => { const i = args.indexOf(name); if (i !== -1) { args.splice(i, 1); return true } return false }
 const json = (d) => JSON.stringify(d, null, 2)
 
@@ -368,19 +370,24 @@ async function main() {
       // ── Database: Leads ($149/mo plan and up) ─────────────
       case 'db-leads': {
         const params = {}
-        for (const f of ['--title', '--industry', '--country', '--state', '--city',
-                         '--company', '--domain', '--company-size', '--seniority',
-                         '--department', '--page', '--limit', '--min-employees', '--max-employees', '--after']) {
-          const v = flag(f)
-          if (v === undefined) continue
-          const key = { '--title': 'title', '--industry': 'industry', '--country': 'country',
+        const keyFor = { '--title': 'title', '--industry': 'industry', '--country': 'country',
                         '--state': 'state', '--city': 'city', '--company': 'companyName',
-                        '--domain': 'companyDomain', '--company-size': 'companySize',
+                        '--domain': 'companyDomain',
                         '--seniority': 'seniority', '--department': 'department',
                         '--page': 'page', '--limit': 'limit',
                         '--min-employees': 'minEmployees', '--max-employees': 'maxEmployees',
-                        '--after': 'after' }[f]
-          params[key] = v
+                        '--after': 'after', '--apollo-url': 'apolloUrl',
+                        '--keywords': 'keywords', '--revenue-min': 'revenueMin', '--revenue-max': 'revenueMax',
+                        '--company-country': 'companyCountry', '--company-state': 'companyState',
+                        '--company-city': 'companyCity', '--not-title': 'notTitle',
+                        '--not-keywords': 'notKeywords', '--not-industry': 'notIndustry' }
+        // List filters take commas: --country "United States,Canada" sends both.
+        const lists = new Set(['--industry', '--country', '--state', '--seniority', '--department',
+                               '--company-country', '--company-state', '--not-industry'])
+        for (const f of Object.keys(keyFor)) {
+          const v = flag(f)
+          if (v === undefined) continue
+          params[keyFor[f]] = lists.has(f) ? v.split(',').map(s => s.trim()).filter(Boolean) : v
         }
         if (flagBool('--has-email')) params.hasEmail = 'true'
         if (flagBool('--has-phone')) params.hasPhone = 'true'
@@ -388,6 +395,7 @@ async function main() {
         const r = await sc.dbLeads(params)
         console.log(`${r.pagination?.total || '?'} total leads, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
         if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
+        if (r.apollo_translation?.not_supported?.length) console.log(`Not supported from the Apollo URL: ${r.apollo_translation.not_supported.join(', ')}`)
         console.log(json(r.data?.slice(0, 3) || r))
         if (r.data?.length > 3) console.log(`... and ${r.data.length - 3} more`)
         break
@@ -445,6 +453,11 @@ ScraperCity CLI - B2B lead generation from your terminal
 
   Database ($149/mo plan and up):
     scrapercity db-leads [filters]           Query lead database
+      --title --industry --country --state --city --company --domain --seniority --department
+      --min-employees --max-employees --has-email --has-phone
+      --keywords --revenue-min --revenue-max --company-country --company-state --company-city
+      --not-title --not-keywords --not-industry
+      --apollo-url "<Apollo people-search URL>"  Search with that URL's filters
       --exclude-delivered                    Only leads you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
 

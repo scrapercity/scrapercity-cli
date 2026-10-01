@@ -45,7 +45,6 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | Slug | Input | Cost | Speed |
 |------|-------|------|-------|
 | `apollo` | `{url, count, fileName}` | $0.0039/lead | ~4 DAYS (use webhook) |
-| `apollo-filters` | `{seniorityLevel, functionDept, companyIndustry, personCountry, personState, companySize, personTitles[], companyDomains[], count}` | $0.0039/lead | ~4 DAYS |
 | `maps` | `{searchStringsArray:["query"], locationQuery, maxCrawledPlacesPerSearch}` | $0.01/place | 5-30 min |
 | `email-validator` | `{emails:["a@b.com"]}` | $0.0036/email | 1-10 min |
 | `email-finder` | `{contacts:[{first_name,last_name,domain}], autoValidateEmails, autoFindMobiles}` | $0.05/contact | 1-10 min |
@@ -78,8 +77,8 @@ Apollo scrapes take **up to 4 days** to deliver. Do NOT poll in a loop.
 | GET | `/api/v1/runs?hours=24&limit=50` | Recent runs |
 | POST | `/api/v1/scrape/cancel/{runId}` | Cancel running job |
 | GET | `/api/v1/scrape/logs/{runId}` | Run logs |
-| GET | `/api/v1/apollo-status` | Apollo service health |
-| GET | `/api/v1/database/leads?title=CTO&country=United%20States&hasEmail=true&limit=100` | Lead DB ($149/mo plan and up, 100k new leads/day). Optional: `excludeDelivered=true` (only leads you don't have yet), `after=0` then `pagination.next_after` (cursor paging) |
+| GET | `/api/v1/apollo-status` | Apollo service health: `{status: "url-based" or "legacy", message, timestamp}` |
+| GET | `/api/v1/database/leads?title=CTO&country=United%20States&hasEmail=true&limit=100` | Lead DB ($149/mo plan and up, 100k new leads/day). Optional: `excludeDelivered=true` (only leads you don't have yet), `after=0` then `pagination.next_after` (cursor paging). Company filters: `keywords`, `revenueMin`/`revenueMax`, `companyCountry`/`companyState`/`companyCity`. Exclusions: `notTitle`, `notKeywords`, `notIndustry`. `apolloUrl=<Apollo people-search URL>` searches with that URL's filters |
 | GET | `/api/v1/database/local-businesses?...` | Local biz DB ($149/mo plan and up). Same optional `excludeDelivered` / `after` |
 | GET | `/api/v1/database/ecommerce?...` | Ecommerce DB ($149/mo plan and up). Same optional `excludeDelivered` / `after` |
 
