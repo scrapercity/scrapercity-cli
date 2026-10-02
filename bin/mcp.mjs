@@ -50,9 +50,9 @@ const UTILITY_TOOLS = [
   },
   {
     name: 'query_lead_database',
-    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have an Apollo people-search URL? Pass it as apolloUrl to search with its filters right away (apollo_translation in the response says what was applied).',
+    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied).',
     inputSchema: { type: 'object', properties: {
-      apolloUrl: { type: 'string', description: 'An Apollo people-search URL (app.apollo.io/#/people?...). Its filters become the search; any other filter you pass overrides the matching one.' },
+      url: { type: 'string', description: 'A people-search URL (the address of a people search with its filters). Its filters become the search; any other filter you pass overrides the matching one.' },
       title: { type: 'string', description: 'Job title filter, comma separated for several (partial match, e.g. "CEO, Founder")' },
       industry: { type: 'array', items: { type: 'string' }, description: 'Company industries (any match)' },
       country: { type: 'array', items: { type: 'string' }, description: 'Person countries, full names like "United States" (US, USA, UK, UAE also work)' },

@@ -189,8 +189,11 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   Company filters: keywords (company tags, whole-word, any match), revenueMin, revenueMax (USD),
            companyCountry, companyState, companyCity (company HQ, not the person)
   Exclusions: notTitle, notKeywords, notIndustry
-  apolloUrl=<Apollo people-search URL>: use that search's filters (other params override).
-           The response adds apollo_translation: { applied, approximated, not_supported }.
+  url=<people-search URL>: use that search's filters (other params override).
+           The response adds search_translation: { applied, approximated, not_supported }.
+           A URL with no filters the database can use returns 400.
+  POST /api/v1/database/leads with a JSON body takes the same parameters (arrays as JSON
+           arrays). Use it for a long url or long lists: a query string over ~16KB is refused.
   Country: full name ("United States"); US, USA, UK, UAE also work.
   Array params use repeated keys: ?seniority=vp&seniority=director
   (keywords / notKeywords also accept commas: ?keywords=saas,fintech)
@@ -202,12 +205,14 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   Every lead returned is saved to your account. Only NEW leads count toward the
   100k/day limit; fetching a lead you already have again is free.
   Returns: { data: [...leads], pagination: { page, limit, total, totalPages, has_more, next_after }, rate_limit,
-             apollo_translation? }
+             search_translation? }
   Lead fields include company_industry, company_size, employees_count, company_website,
   company_annual_revenue, company_city, company_state, company_country, keywords.
   409 with filters_not_applied_yet: the company filters listed can't be used yet (company
   data still being prepared right after launch). Nothing is returned or counted; retry later
   or drop those filters.
+  503: the search took too long to run. Narrow it (fewer titles or keywords, add a location
+  or company size) and retry.
 
 GET /api/v1/database/local-businesses?...
 GET /api/v1/database/ecommerce?...

@@ -376,7 +376,7 @@ async function main() {
                         '--seniority': 'seniority', '--department': 'department',
                         '--page': 'page', '--limit': 'limit',
                         '--min-employees': 'minEmployees', '--max-employees': 'maxEmployees',
-                        '--after': 'after', '--apollo-url': 'apolloUrl',
+                        '--after': 'after', '--url': 'url', '--apollo-url': 'apolloUrl',
                         '--keywords': 'keywords', '--revenue-min': 'revenueMin', '--revenue-max': 'revenueMax',
                         '--company-country': 'companyCountry', '--company-state': 'companyState',
                         '--company-city': 'companyCity', '--not-title': 'notTitle',
@@ -395,7 +395,8 @@ async function main() {
         const r = await sc.dbLeads(params)
         console.log(`${r.pagination?.total || '?'} total leads, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
         if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
-        if (r.apollo_translation?.not_supported?.length) console.log(`Not supported from the Apollo URL: ${r.apollo_translation.not_supported.join(', ')}`)
+        const tr = r.search_translation || r.apollo_translation
+        if (tr?.not_supported?.length) console.log(`Not supported from the search URL: ${tr.not_supported.join(', ')}`)
         console.log(json(r.data?.slice(0, 3) || r))
         if (r.data?.length > 3) console.log(`... and ${r.data.length - 3} more`)
         break
@@ -457,7 +458,7 @@ ScraperCity CLI - B2B lead generation from your terminal
       --min-employees --max-employees --has-email --has-phone
       --keywords --revenue-min --revenue-max --company-country --company-state --company-city
       --not-title --not-keywords --not-industry
-      --apollo-url "<Apollo people-search URL>"  Search with that URL's filters
+      --url "<people-search URL>"  Search with that URL's filters
       --exclude-delivered                    Only leads you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
 
