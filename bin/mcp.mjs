@@ -81,6 +81,30 @@ const UTILITY_TOOLS = [
       excludeDelivered: { type: 'boolean', description: 'Skip leads this account already has (from the API or unlocked in the dashboard). With this on, keep page at 1 or use after.' },
       after: { type: 'string', description: 'Cursor paging: return leads after this lead id. Use "0" to start, then the pagination.next_after from each response.' }
     } }
+  },
+  {
+    name: 'query_local_business_database',
+    description: 'Query the local business database directly. Returns businesses with phone numbers, emails, websites, addresses and ratings, many with a named contact person. Up to 100 per request. Included with the $149/mo plan (100,000 new businesses a day; businesses you already have do not count again). Set hasContact=true for only businesses with a named contact person. For a daily pull of only new businesses set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null.',
+    inputSchema: { type: 'object', properties: {
+      category: { type: 'array', items: { type: 'string' }, description: 'Business categories, e.g. ["Dentist"]. A word also finds categories that contain it ("restaurant" finds "Mexican restaurant")' },
+      country: { type: 'array', items: { type: 'string' }, description: 'Two-letter country codes, e.g. ["US"]' },
+      state: { type: 'string', description: 'State or region, comma separated for several (US abbreviations work, e.g. "TX")' },
+      city: { type: 'string', description: 'City (partial match)' },
+      postalCode: { type: 'string', description: 'Postal or zip code' },
+      query: { type: 'string', description: 'Search business names and descriptions' },
+      minRating: { type: 'number', description: 'Minimum Google rating (1-5)' },
+      maxRating: { type: 'number', description: 'Maximum Google rating (1-5)' },
+      minReviews: { type: 'number', description: 'Minimum number of reviews' },
+      maxReviews: { type: 'number', description: 'Maximum number of reviews' },
+      hasEmail: { type: 'boolean', description: 'Only businesses with an email address' },
+      hasPhone: { type: 'boolean', description: 'Only businesses with a phone number' },
+      hasWebsite: { type: 'boolean', description: 'Only businesses with a website' },
+      hasContact: { type: 'boolean', description: 'Only businesses with a named contact person' },
+      page: { type: 'number', description: 'Page number (default 1)', default: 1 },
+      limit: { type: 'number', description: 'Results per page (max 100)', default: 50 },
+      excludeDelivered: { type: 'boolean', description: 'Skip businesses this account already has (from the API or unlocked in the dashboard). With this on, keep page at 1 or use after.' },
+      after: { type: 'string', description: 'Cursor paging: return businesses after this id. Use "0" to start, then the pagination.next_after from each response.' }
+    } }
   }
 ]
 
@@ -114,6 +138,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           else delete params.excludeDelivered
           if (params.after !== undefined && params.after !== null) params.after = String(params.after)
           result = await sc.dbLeads(params)
+          break
+        }
+        case 'query_local_business_database': {
+          const params = { ...args }
+          for (const k of ['hasEmail', 'hasPhone', 'hasWebsite', 'hasContact', 'excludeDelivered']) {
+            if (params[k]) params[k] = 'true'
+            else delete params[k]
+          }
+          if (params.after !== undefined && params.after !== null) params.after = String(params.after)
+          result = await sc.dbLocalBusinesses(params)
           break
         }
         default:

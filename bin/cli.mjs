@@ -402,6 +402,33 @@ async function main() {
         break
       }
 
+      // ── Database: Local businesses ($149/mo plan and up) ──
+      case 'db-local': {
+        const params = {}
+        const keyFor = { '--category': 'category', '--country': 'country', '--state': 'state', '--city': 'city',
+                        '--postal-code': 'postalCode', '--query': 'query', '--min-rating': 'minRating', '--max-rating': 'maxRating',
+                        '--min-reviews': 'minReviews', '--max-reviews': 'maxReviews', '--page': 'page', '--limit': 'limit',
+                        '--after': 'after' }
+        // List filters take commas: --category "Dentist,Orthodontist" sends both.
+        const lists = new Set(['--category', '--country'])
+        for (const f of Object.keys(keyFor)) {
+          const v = flag(f)
+          if (v === undefined) continue
+          params[keyFor[f]] = lists.has(f) ? String(v).split(',').map(s => s.trim()).filter(Boolean) : v
+        }
+        if (flagBool('--has-email')) params.hasEmail = 'true'
+        if (flagBool('--has-phone')) params.hasPhone = 'true'
+        if (flagBool('--has-website')) params.hasWebsite = 'true'
+        if (flagBool('--has-contact')) params.hasContact = 'true'
+        if (flagBool('--exclude-delivered')) params.excludeDelivered = 'true'
+        const r = await sc.dbLocalBusinesses(params)
+        console.log(`${r.pagination?.total || '?'} total businesses, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
+        if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
+        console.log(json(r.data?.slice(0, 3) || r))
+        if (r.data?.length > 3) console.log(`... and ${r.data.length - 3} more`)
+        break
+      }
+
       // ── Poll (convenience) ────────────────────────────────
       case 'poll': {
         if (!args[0]) die('Usage: scrapercity poll <runId> [--interval 15]')
@@ -460,6 +487,12 @@ ScraperCity CLI - B2B lead generation from your terminal
       --not-title --not-keywords --not-industry
       --url "<people-search URL>"  Search with that URL's filters
       --exclude-delivered                    Only leads you don't already have
+      --after <id>                           Cursor paging (start with 0, then use the printed next id)
+    scrapercity db-local [filters]           Query local business database
+      --category --country --state --city --postal-code --query
+      --min-rating --max-rating --min-reviews --max-reviews
+      --has-email --has-phone --has-website --has-contact (only businesses with a named contact person)
+      --exclude-delivered                    Only businesses you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
 
   Env: SCRAPERCITY_API_KEY=...  or  scrapercity login

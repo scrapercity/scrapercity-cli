@@ -214,9 +214,15 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   503: the search took too long to run. Narrow it (fewer titles or keywords, add a location
   or company size) and retry.
 
-GET /api/v1/database/local-businesses?...
+GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=true&limit=100
+  Local businesses ($149/mo plan and up, 100k new businesses/day), same pattern as above.
+  Filters: category (repeat for several), country (two-letter code), state, city, postalCode,
+  query (business name and description), minRating, maxRating, minReviews, maxReviews,
+  hasEmail, hasPhone, hasWebsite, hasContact (only businesses with a named contact person).
+  Optional: excludeDelivered=true, after=<id> (as above).
+
 GET /api/v1/database/ecommerce?...
-  Same pattern (including excludeDelivered and after), different datasets.
+  Same pattern (including excludeDelivered and after), different dataset.
 
 ────────────────────────────────────────
 ERROR CODES
