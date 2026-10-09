@@ -105,6 +105,7 @@ curl -O https://app.scrapercity.com/api/downloads/RUN_ID \
 | **BuiltWith** | All sites using a technology | $4.99/search |
 | **Criminal Records** | Background check by name | $1.00 if found |
 | **Lead Database** | 3M+ B2B contacts, instant query ($149/mo plan and up) | Included |
+| **Local Business Database** | Local businesses with phones, emails and ratings, instant query ($149/mo plan and up) | Included |
 
 ## How It Works
 

@@ -50,7 +50,7 @@ const DASHBOARD_ONLY = []
 const SLUG_ALIAS = { 'skip-trace': 'people-finder', 'techstack': 'builtwith' }
 const canon = (s) => SLUG_ALIAS[s] || s
 // Canonical products that are NOT POST /api/v1/scrape/ scrapers (excluded from tools).
-const NON_SCRAPER = ['buy-credits', 'database-leads', 'database-enrichment', 'database-local-businesses', 'database-ecommerce']
+const NON_SCRAPER = ['buy-credits', 'database-leads', 'database-enrichment', 'database-local-businesses', 'database-ecommerce', 'database-local-business-enrichment']
 
 // ── Price source of truth = the PRICE_PER_*_MICRO env vars ─────
 // The backend charges from these (generic path via registry.priceEnv, special handlers

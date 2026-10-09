@@ -50,8 +50,12 @@ apollo
 
 maps
   Body: { searchStringsArray: ["plumbers"], locationQuery: "Denver, CO", maxCrawledPlacesPerSearch: 500 }
-  Returns: { runId, datasetId, priceMicro }
+  Returns: { runId, datasetId, priceMicro, local_business_database? }
+    local_business_database (when there are matches): { matches, url, api } - businesses for the
+    same search already in the Local Business Database (ones you don't have), a dashboard link,
+    and the /api/v1/database/local-businesses call that returns them now.
   Cost: $0.01/place | Delivery: 5-30 min
+  To search by category and location without running a scrape, use the Local Business Database (below).
 
 email-validator
   Body: { emails: ["user@example.com", "test@company.com"] }
@@ -216,10 +220,34 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
 
 GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=true&limit=100
   Local businesses ($149/mo plan and up, 100k new businesses/day), same pattern as above.
+  Search the way you would on Google Maps:
+  keyword=thai restaurant (repeat for several; matches business names and categories, any keyword;
+           a place inside a keyword, "plumbers in Austin TX", is the location when none is sent)
+  location=Houston TX (repeat for several, up to 2,000: cities, states, countries or postal codes)
+           The response adds searched_as: { keywords: [{ text, words, categories, matches_nothing }],
+           places: [{ text, read_as, kind, not_found? }] }. A search that finds nothing adds
+           lead_database: { count, read_as, filters, dashboard_url } when the Lead Database has 100+
+           people for it (keywords read as job title or company keywords, whichever has more).
   Filters: category (repeat for several), country (two-letter code), state, city, postalCode,
-  query (business name and description), minRating, maxRating, minReviews, maxReviews,
+  query (business name and description), title (business name, comma separated for several),
+  minRating, maxRating, minReviews, maxReviews,
   hasEmail, hasPhone, hasWebsite, hasContact (only businesses with a named contact person).
+  box=minLat,minLng,maxLat,maxLng: only businesses inside that map area (a box that can't be
+           read returns 400).
+  Exclusions: notCategory (repeat for several)
+  url=<Google Maps search URL>: use that search's keyword and place (other params override).
+           The response adds search_translation: { applied, approximated, not_supported }.
+           A URL with nothing the database can use returns 400.
+  POST /api/v1/database/local-businesses with a JSON body takes the same parameters (arrays as
+           JSON arrays). Use it for a long url or long lists: a query string over ~16KB is refused.
   Optional: excludeDelivered=true, after=<id> (as above).
+  Returns: { data: [...businesses], pagination: { page, limit, total, totalPages, has_more, next_after },
+             rate_limit, search_translation?, searched_as?, lead_database? }
+  Business fields include title, category_name, address, city, state, postal_code, country_code,
+  phone, website, emails, total_score, reviews_count, lat, lng, and contact_first_name,
+  contact_last_name, contact_job_title, contact_email, contact_mobile when there is a named contact.
+  503: the search took too long to run. Narrow it (add a category, a city, a state or a postal
+  code) and retry.
 
 GET /api/v1/database/ecommerce?...
   Same pattern (including excludeDelivered and after), different dataset.
@@ -257,3 +285,7 @@ WORKFLOW EXAMPLES
 
 6. REAL ESTATE PIPELINE:
    Zillow Agents + Property Lookup → download CSVs → enrich with email-finder
+
+7. LOCAL BUSINESS DATABASE (instant):
+   GET /api/v1/database/local-businesses?keyword=dentist&location=Austin%2C+TX&hasEmail=true&page=1
+   Loop pages until page > totalPages

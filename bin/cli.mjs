@@ -408,13 +408,17 @@ async function main() {
         const keyFor = { '--category': 'category', '--country': 'country', '--state': 'state', '--city': 'city',
                         '--postal-code': 'postalCode', '--query': 'query', '--min-rating': 'minRating', '--max-rating': 'maxRating',
                         '--min-reviews': 'minReviews', '--max-reviews': 'maxReviews', '--page': 'page', '--limit': 'limit',
-                        '--after': 'after' }
-        // List filters take commas: --category "Dentist,Orthodontist" sends both.
-        const lists = new Set(['--category', '--country'])
+                        '--after': 'after', '--url': 'url', '--title': 'title', '--not-category': 'notCategory',
+                        '--box': 'box', '--keyword': 'keyword', '--location': 'location' }
+        // List filters take commas: --category "Dentist,Orthodontist" sends both. Locations take semicolons, since a
+        // place has commas of its own: --location "Houston, TX; Austin, TX"
+        // (--keyword goes as typed: the server splits a list on commas and keeps "plumbers in Austin, TX" whole)
+        const lists = new Set(['--category', '--country', '--not-category'])
         for (const f of Object.keys(keyFor)) {
           const v = flag(f)
           if (v === undefined) continue
-          params[keyFor[f]] = lists.has(f) ? String(v).split(',').map(s => s.trim()).filter(Boolean) : v
+          params[keyFor[f]] = lists.has(f) ? String(v).split(',').map(s => s.trim()).filter(Boolean)
+            : f === '--location' ? String(v).split(';').map(s => s.trim()).filter(Boolean) : v
         }
         if (flagBool('--has-email')) params.hasEmail = 'true'
         if (flagBool('--has-phone')) params.hasPhone = 'true'
@@ -424,6 +428,14 @@ async function main() {
         const r = await sc.dbLocalBusinesses(params)
         console.log(`${r.pagination?.total || '?'} total businesses, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
         if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
+        if (r.search_translation?.not_supported?.length) console.log(`Not supported from the search URL: ${r.search_translation.not_supported.join(', ')}`)
+        if (r.searched_as) {
+          const places = (r.searched_as.places || []).map(p => p.not_found ? `${p.text} (not found)` : p.read_as)
+          if (places.length) console.log(`Places: ${places.slice(0, 10).join('; ')}${places.length > 10 ? ` and ${places.length - 10} more` : ''}`)
+          const none = (r.searched_as.keywords || []).filter(k => k.matches_nothing).map(k => k.text)
+          if (none.length) console.log(`Keywords no business name or category has: ${none.join(', ')}`)
+        }
+        if (r.lead_database) console.log(`Nothing here, but the Lead Database has ${r.lead_database.count} people for this search by ${r.lead_database.read_as}: ${r.lead_database.dashboard_url}`)
         console.log(json(r.data?.slice(0, 3) || r))
         if (r.data?.length > 3) console.log(`... and ${r.data.length - 3} more`)
         break
@@ -489,9 +501,14 @@ ScraperCity CLI - B2B lead generation from your terminal
       --exclude-delivered                    Only leads you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
     scrapercity db-local [filters]           Query local business database
-      --category --country --state --city --postal-code --query
+      --keyword "thai restaurant,sushi"      What the businesses do or are called (any of them)
+      --location "Houston, TX; Austin, TX"   Cities, states, countries or postal codes (separate with ;)
+      --category --country --state --city --postal-code --query --title
       --min-rating --max-rating --min-reviews --max-reviews
       --has-email --has-phone --has-website --has-contact (only businesses with a named contact person)
+      --not-category
+      --box "minLat,minLng,maxLat,maxLng"    Only businesses inside this map area
+      --url "<Google Maps search URL>"  Search with that URL's keyword and place
       --exclude-delivered                    Only businesses you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
 
