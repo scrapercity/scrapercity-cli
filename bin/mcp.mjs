@@ -111,6 +111,36 @@ const UTILITY_TOOLS = [
       excludeDelivered: { type: 'boolean', description: 'Skip businesses this account already has (from the API or unlocked in the dashboard). With this on, keep page at 1 or use after.' },
       after: { type: 'string', description: 'Cursor paging: return businesses after this id. Use "0" to start, then the pagination.next_after from each response.' }
     } }
+  },
+  {
+    name: 'query_ecommerce_database',
+    description: 'Query the ecommerce store database directly. Returns online stores with platform, estimated monthly sales and visits, employee count, emails, phones and social links. Up to 100 per request. Included with the $149/mo plan (100,000 new stores a day; stores you already have do not count again). For a daily pull of only new stores set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null.',
+    inputSchema: { type: 'object', properties: {
+      platform: { type: 'array', items: { type: 'string' }, description: 'Ecommerce platforms, e.g. ["shopify", "woocommerce"] (any match)' },
+      country: { type: 'array', items: { type: 'string' }, description: 'Two-letter country codes, e.g. ["US"]' },
+      state: { type: 'string', description: 'State (partial match)' },
+      city: { type: 'string', description: 'City (partial match)' },
+      category: { type: 'array', items: { type: 'string' }, description: 'Store categories (any match)' },
+      merchant: { type: 'string', description: 'Merchant name (partial match)' },
+      domain: { type: 'string', description: 'Store domain(s), comma or space separated' },
+      technologies: { type: 'array', items: { type: 'string' }, description: 'Technologies the store uses (any match)' },
+      planExclude: { type: 'array', items: { type: 'string' }, description: 'Exclude stores on these plan tiers, e.g. ["Shopify Plus"]' },
+      salesMin: { type: 'number', description: 'Minimum estimated monthly sales, USD' },
+      salesMax: { type: 'number', description: 'Maximum estimated monthly sales, USD' },
+      visitsMin: { type: 'number', description: 'Minimum estimated monthly visits' },
+      visitsMax: { type: 'number', description: 'Maximum estimated monthly visits' },
+      employeesMin: { type: 'number', description: 'Minimum employee count' },
+      employeesMax: { type: 'number', description: 'Maximum employee count' },
+      hasEmail: { type: 'boolean', description: 'Only stores with an email address' },
+      hasPhone: { type: 'boolean', description: 'Only stores with a phone number' },
+      hasInstagram: { type: 'boolean', description: 'Only stores with Instagram' },
+      hasFacebook: { type: 'boolean', description: 'Only stores with Facebook' },
+      hasTiktok: { type: 'boolean', description: 'Only stores with TikTok' },
+      page: { type: 'number', description: 'Page number (default 1)', default: 1 },
+      limit: { type: 'number', description: 'Results per page (max 100)', default: 50 },
+      excludeDelivered: { type: 'boolean', description: 'Skip stores this account already has (from the API or unlocked in the dashboard). With this on, keep page at 1 or use after.' },
+      after: { type: 'string', description: 'Cursor paging: return stores after this id. Use "0" to start, then the pagination.next_after from each response.' }
+    } }
   }
 ]
 
@@ -154,6 +184,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           }
           if (params.after !== undefined && params.after !== null) params.after = String(params.after)
           result = await sc.dbLocalBusinesses(params)
+          break
+        }
+        case 'query_ecommerce_database': {
+          const params = { ...args }
+          for (const k of ['hasEmail', 'hasPhone', 'hasInstagram', 'hasFacebook', 'hasTiktok', 'excludeDelivered']) {
+            if (params[k]) params[k] = 'true'
+            else delete params[k]
+          }
+          if (params.after !== undefined && params.after !== null) params.after = String(params.after)
+          result = await sc.dbEcommerce(params)
           break
         }
         default:
