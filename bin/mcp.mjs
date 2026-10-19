@@ -49,6 +49,14 @@ const UTILITY_TOOLS = [
     inputSchema: { type: 'object', properties: { runId: { type: 'string', description: 'The run ID to cancel' } }, required: ['runId'] }
   },
   {
+    name: 'plan_search',
+    description: 'Turn a plain-English request into ready-to-run database searches. Describe who you want ("dentists in Austin", "websites that use Shopify", "CEOs of SaaS companies in Texas") or what you sell ("I sell life insurance"). Returns a few searches, each with its database, filters set to values that database really has, how many records match (leaving out what this account already has), a dashboard link, and apiParams to pass as they are to the matching query tool: query_lead_database for database/leads, query_local_business_database for database/local-businesses, query_ecommerce_database for database/ecommerce. Included with the $149/mo plan, like the database tools. Use it before a database query whenever you are not sure of the exact filter values.',
+    inputSchema: { type: 'object', properties: {
+      query: { type: 'string', description: 'What you are looking for or what you sell, in plain English' },
+      database: { type: 'string', enum: ['leads', 'local', 'ecommerce'], description: 'Optional: plan in this database only (leads = people at companies, local = local businesses, ecommerce = online stores). Leave it out to let the planner pick the databases that fit.' }
+    }, required: ['query'] }
+  },
+  {
     name: 'query_lead_database',
     description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied).',
     inputSchema: { type: 'object', properties: {
@@ -166,6 +174,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           break
         }
         case 'cancel_run': result = await sc.cancel(args.runId); break
+        case 'plan_search': result = await sc.planSearch(args.query, args.database); break
         case 'query_lead_database': {
           const params = { ...args }
           if (params.hasEmail) params.hasEmail = 'true'

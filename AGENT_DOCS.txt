@@ -252,6 +252,16 @@ GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=tru
 GET /api/v1/database/ecommerce?...
   Same pattern (including excludeDelivered and after), different dataset.
 
+POST /api/v1/database/plan  { "query": "dentists in Austin", "database": "local" }
+  (or GET /api/v1/database/plan?query=...&database=...)
+  $149/mo plan and up; planning does not count toward the daily limit. Plain English -> ready-to-run
+  database searches. query is who you want ("websites that
+  use shopify", "CEOs of SaaS companies in Texas") or what you sell ("I sell life insurance").
+  database (optional): leads | local | ecommerce; leave it out to let the planner pick.
+  Returns: { targeting, searches: [{ database, name, description, filters, count, apiEndpoint,
+             apiParams, link }] }. Filters use values the database really has; count leaves out
+             records this account already has. Send apiParams as they are to /api/v1/<apiEndpoint>.
+
 ────────────────────────────────────────
 ERROR CODES
 ────────────────────────────────────────

@@ -441,6 +441,22 @@ async function main() {
         break
       }
 
+      // ── Plan: plain English -> database searches ($149/mo plan and up) ──
+      case 'plan': {
+        const database = flag('--database')
+        const query = args.join(' ').trim()
+        if (!query) die('Usage: scrapercity plan "dentists in Austin" [--database leads|local|ecommerce]')
+        const r = await sc.planSearch(query, typeof database === 'string' ? database : undefined)
+        if (r.targeting) console.log(r.targeting)
+        for (const s of r.searches || []) {
+          console.log(`\n${s.name} (${s.database}): ${Number(s.count || 0).toLocaleString()} matches`)
+          console.log(`  ${s.apiEndpoint}: ${JSON.stringify(s.apiParams)}`)
+          console.log(`  ${s.link}`)
+        }
+        if (!(r.searches || []).length) console.log('No search found for that. Try naming who or what you want.')
+        break
+      }
+
       // ── Poll (convenience) ────────────────────────────────
       case 'poll': {
         if (!args[0]) die('Usage: scrapercity poll <runId> [--interval 15]')
@@ -490,6 +506,10 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity cancel <runId>               Cancel a running scrape
     scrapercity logs <runId>                 View run logs
     scrapercity runs [--hours 24]            List recent runs
+
+  Plan ($149/mo plan and up):
+    scrapercity plan "dentists in Austin"    Plain English -> ready-to-run database searches
+      --database leads|local|ecommerce       Only this database (default: the ones that fit)
 
   Database ($149/mo plan and up):
     scrapercity db-leads [filters]           Query lead database
