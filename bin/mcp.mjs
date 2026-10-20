@@ -58,7 +58,7 @@ const UTILITY_TOOLS = [
   },
   {
     name: 'query_lead_database',
-    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied).',
+    description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied). Target by the technologies a company\'s website runs: technologies (any of), technologiesAll (all of), notTechnologies (none of), e.g. technologiesAll ["Klaviyo", "PayPal", "Shopify"] with notTechnologies ["Facebook Pixel"].',
     inputSchema: { type: 'object', properties: {
       url: { type: 'string', description: 'A people-search URL (the address of a people search with its filters). Its filters become the search; any other filter you pass overrides the matching one.' },
       title: { type: 'string', description: 'Job title filter, comma separated for several (partial match, e.g. "CEO, Founder")' },
@@ -81,6 +81,9 @@ const UTILITY_TOOLS = [
       notTitle: { type: 'string', description: 'Exclude titles containing any of these (comma separated)' },
       notKeywords: { type: 'array', items: { type: 'string' }, description: 'Exclude companies with any of these keywords' },
       notIndustry: { type: 'array', items: { type: 'string' }, description: 'Exclude these industries' },
+      technologies: { type: 'array', items: { type: 'string' }, description: 'Companies whose website runs ANY of these technologies, e.g. ["HubSpot"]' },
+      technologiesAll: { type: 'array', items: { type: 'string' }, description: 'Companies whose website runs ALL of these technologies, e.g. ["Klaviyo", "PayPal"] (keep it to 1-3)' },
+      notTechnologies: { type: 'array', items: { type: 'string' }, description: 'Leave out companies whose website runs any of these technologies, e.g. ["Facebook Pixel"]' },
       socialUrl: { type: 'string', description: 'Match a social profile URL' },
       hasEmail: { type: 'boolean', description: 'Only contacts with email' },
       hasPhone: { type: 'boolean', description: 'Only contacts with phone' },
@@ -122,7 +125,7 @@ const UTILITY_TOOLS = [
   },
   {
     name: 'query_ecommerce_database',
-    description: 'Query the ecommerce store database directly. Returns online stores with platform, estimated monthly sales and visits, employee count, emails, phones and social links. Up to 100 per request. Included with the $149/mo plan (100,000 new stores a day; stores you already have do not count again). For a daily pull of only new stores set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null.',
+    description: 'Query the ecommerce store database directly. Returns online stores with platform, estimated monthly sales and visits, employee count, emails, phones and social links. Up to 100 per request. Included with the $149/mo plan (100,000 new stores a day; stores you already have do not count again). For a daily pull of only new stores set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Combine technologies (any of), technologiesAll (all of) and notTechnologies (none of) for exact targeting, e.g. technologiesAll ["Klaviyo", "PayPal"] with notTechnologies ["Facebook Pixel"].',
     inputSchema: { type: 'object', properties: {
       platform: { type: 'array', items: { type: 'string' }, description: 'Ecommerce platforms, e.g. ["shopify", "woocommerce"] (any match)' },
       country: { type: 'array', items: { type: 'string' }, description: 'Two-letter country codes, e.g. ["US"]' },
@@ -132,6 +135,8 @@ const UTILITY_TOOLS = [
       merchant: { type: 'string', description: 'Merchant name (partial match)' },
       domain: { type: 'string', description: 'Store domain(s), comma or space separated' },
       technologies: { type: 'array', items: { type: 'string' }, description: 'Technologies the store uses (any match)' },
+      technologiesAll: { type: 'array', items: { type: 'string' }, description: 'Stores that run ALL of these technologies, e.g. ["Klaviyo", "PayPal"]' },
+      notTechnologies: { type: 'array', items: { type: 'string' }, description: 'Leave out stores that run any of these technologies, e.g. ["Facebook Pixel"]' },
       planExclude: { type: 'array', items: { type: 'string' }, description: 'Exclude stores on these plan tiers, e.g. ["Shopify Plus"]' },
       salesMin: { type: 'number', description: 'Minimum estimated monthly sales, USD' },
       salesMax: { type: 'number', description: 'Maximum estimated monthly sales, USD' },

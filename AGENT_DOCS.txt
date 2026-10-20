@@ -193,6 +193,10 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   Company filters: keywords (company tags, whole-word, any match), revenueMin, revenueMax (USD),
            companyCountry, companyState, companyCity (company HQ, not the person)
   Exclusions: notTitle, notKeywords, notIndustry
+  Website technologies (repeat the parameter for several): technologies (runs any of),
+           technologiesAll (runs all of), notTechnologies (runs none of). E.g. companies on
+           Klaviyo, PayPal and Shopify without Facebook Pixel:
+           technologiesAll=Klaviyo&technologiesAll=PayPal&technologiesAll=Shopify&notTechnologies=Facebook%20Pixel
   url=<people-search URL>: use that search's filters (other params override).
            The response adds search_translation: { applied, approximated, not_supported }.
            A URL with no filters the database can use returns 400.
@@ -251,6 +255,8 @@ GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=tru
 
 GET /api/v1/database/ecommerce?...
   Same pattern (including excludeDelivered and after), different dataset.
+  Technologies: technologies (runs any of), technologiesAll (runs all of), notTechnologies
+  (runs none of), each repeatable, e.g. technologiesAll=Klaviyo&technologiesAll=PayPal&notTechnologies=Facebook%20Pixel
 
 POST /api/v1/database/plan  { "query": "dentists in Austin", "database": "local" }
   (or GET /api/v1/database/plan?query=...&database=...)

@@ -380,10 +380,13 @@ async function main() {
                         '--keywords': 'keywords', '--revenue-min': 'revenueMin', '--revenue-max': 'revenueMax',
                         '--company-country': 'companyCountry', '--company-state': 'companyState',
                         '--company-city': 'companyCity', '--not-title': 'notTitle',
-                        '--not-keywords': 'notKeywords', '--not-industry': 'notIndustry' }
+                        '--not-keywords': 'notKeywords', '--not-industry': 'notIndustry',
+                        '--technologies': 'technologies', '--technologies-all': 'technologiesAll',
+                        '--not-technologies': 'notTechnologies' }
         // List filters take commas: --country "United States,Canada" sends both.
         const lists = new Set(['--industry', '--country', '--state', '--seniority', '--department',
-                               '--company-country', '--company-state', '--not-industry'])
+                               '--company-country', '--company-state', '--not-industry',
+                               '--technologies', '--technologies-all', '--not-technologies'])
         for (const f of Object.keys(keyFor)) {
           const v = flag(f)
           if (v === undefined) continue
@@ -517,6 +520,7 @@ ScraperCity CLI - B2B lead generation from your terminal
       --min-employees --max-employees --has-email --has-phone
       --keywords --revenue-min --revenue-max --company-country --company-state --company-city
       --not-title --not-keywords --not-industry
+      --technologies --technologies-all --not-technologies   Website technologies: any of / all of / none of (comma separated)
       --url "<people-search URL>"  Search with that URL's filters
       --exclude-delivered                    Only leads you don't already have
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
