@@ -71,6 +71,14 @@ const UTILITY_TOOLS = [
     }, required: ['id'] }
   },
   {
+    name: 'download_lookalike_csv',
+    description: 'Save a finished lookalike job (find_lookalike_groups) as a CSV file, one row per uploaded site: whether it was read, what it sells and to whom, business model, industry, keywords, size, country, the contacts from your upload with their titles, and its group. No extra charge.',
+    inputSchema: { type: 'object', properties: {
+      id: { type: 'string', description: 'The job id from find_lookalike_groups' },
+      outputPath: { type: 'string', description: 'File path to save the CSV (default: lookalike-{id}.csv)' }
+    }, required: ['id'] }
+  },
+  {
     name: 'query_lead_database',
     description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied). Target by the technologies a company\'s website runs: technologies (any of), technologiesAll (all of), notTechnologies (none of), e.g. technologiesAll ["Klaviyo", "PayPal", "Shopify"] with notTechnologies ["Facebook Pixel"].',
     inputSchema: { type: 'object', properties: {
@@ -196,6 +204,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         case 'plan_search': result = await sc.planSearch(args.query, args.database); break
         case 'find_lookalike_groups': result = await sc.lookalikeStart(args.domains); break
         case 'get_lookalike_groups': result = await sc.lookalikeJob(args.id); break
+        case 'download_lookalike_csv': {
+          const dl = await sc.lookalikeCsv(args.id, args.outputPath)
+          result = { success: true, path: dl.path, sizeKB: Math.round(dl.bytes / 1024) }
+          break
+        }
         case 'query_lead_database': {
           const params = { ...args }
           if (params.hasEmail) params.hasEmail = 'true'

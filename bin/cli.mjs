@@ -486,6 +486,14 @@ async function main() {
         break
       }
 
+      case 'lookalike-csv': {
+        const out = flag('-o') || flag('--output')
+        if (!args[0]) die('Usage: scrapercity lookalike-csv <jobId> [-o lookalike.csv]')
+        const dl = await sc.lookalikeCsv(args[0], typeof out === 'string' ? out : undefined)
+        console.log(`✓ Saved ${dl.path} (${Math.round(dl.bytes / 1024)} KB)`)
+        break
+      }
+
       case 'lookalike-status': {
         if (!args[0]) die('Usage: scrapercity lookalike-status <jobId>')
         console.log(json((await sc.lookalikeJob(args[0])).job))
@@ -550,6 +558,7 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity lookalike acme.com mike@globex.com ...   Group your customers into lookalike audiences
       --file customers.txt                   One website or work email per line
     scrapercity lookalike-status <jobId>     Read a lookalike job
+    scrapercity lookalike-csv <jobId> [-o f.csv]  Every site of a finished job as a CSV
 
   Database ($149/mo plan and up):
     scrapercity db-leads [filters]           Query lead database

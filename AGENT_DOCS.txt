@@ -276,6 +276,9 @@ GET  /api/v1/autoleads/lookalike?id=<job id>
   filters to that database's endpoint to pull the records. $0.01 per site read, from credits when the
   job finishes; sites that can't be read are free. 402 = balance under $0.01 x every site (required,
   available). 409 = a job is already running (job_id). At least 3 company sites; personal emails skipped.
+  GET /api/v1/autoleads/lookalike?id=<job id>&format=csv returns the finished job as a CSV, one row per
+  site: Domain, Read, Group, Sells, Sells To, Business Model, Industry, Keywords, Size, Country,
+  Contact Emails, Contact Titles. No extra charge.
 
 ────────────────────────────────────────
 ERROR CODES
