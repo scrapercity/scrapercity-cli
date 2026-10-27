@@ -57,6 +57,20 @@ const UTILITY_TOOLS = [
     }, required: ['query'] }
   },
   {
+    name: 'find_lookalike_groups',
+    description: 'Group your customers into lookalike audiences. Send their websites or work emails (mike@acme.com reads acme.com and looks up Mike\'s title). Starts a background job and returns it with its id; then call get_lookalike_groups until status is done. Each group comes with ready-to-run database filters, a match count and the best tool to reach businesses like them. $0.01 per site read, from credits; your balance must cover $0.01 x every site. One job at a time. $149/mo plan and up.',
+    inputSchema: { type: 'object', properties: {
+      domains: { type: 'array', items: { type: 'string' }, description: 'Your customers\' websites, URLs or work emails. At least 3 company sites.' }
+    }, required: ['domains'] }
+  },
+  {
+    name: 'get_lookalike_groups',
+    description: 'Read a lookalike job started with find_lookalike_groups: status (running, done, failed), percent, and when done the groups. Each group has name, description, sites (your customers in it), database (leads, local, ecommerce), filters, count and tool. Pass its filters to query_lead_database, query_local_business_database or query_ecommerce_database to pull the records.',
+    inputSchema: { type: 'object', properties: {
+      id: { type: 'string', description: 'The job id from find_lookalike_groups' }
+    }, required: ['id'] }
+  },
+  {
     name: 'query_lead_database',
     description: 'Query the B2B lead database directly. Returns contacts with names, emails, phones, titles, companies (plus company website, revenue, HQ location and keywords). Up to 100 per request. Included with the $149/mo plan (100,000 new leads a day; leads you already have do not count again). For a daily pull of only new leads set excludeDelivered=true. For big pulls page with after: send after="0" first, then the pagination.next_after from each response until it is null. Have a saved people-search URL? Pass it as url to search with its filters right away (search_translation in the response says what was applied). Target by the technologies a company\'s website runs: technologies (any of), technologiesAll (all of), notTechnologies (none of), e.g. technologiesAll ["Klaviyo", "PayPal", "Shopify"] with notTechnologies ["Facebook Pixel"].',
     inputSchema: { type: 'object', properties: {
@@ -180,6 +194,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
         case 'cancel_run': result = await sc.cancel(args.runId); break
         case 'plan_search': result = await sc.planSearch(args.query, args.database); break
+        case 'find_lookalike_groups': result = await sc.lookalikeStart(args.domains); break
+        case 'get_lookalike_groups': result = await sc.lookalikeJob(args.id); break
         case 'query_lead_database': {
           const params = { ...args }
           if (params.hasEmail) params.hasEmail = 'true'

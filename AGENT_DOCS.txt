@@ -268,6 +268,15 @@ POST /api/v1/database/plan  { "query": "dentists in Austin", "database": "local"
              apiParams, link }] }. Filters use values the database really has; count leaves out
              records this account already has. Send apiParams as they are to /api/v1/<apiEndpoint>.
 
+POST /api/v1/autoleads/lookalike  { "domains": ["acme.com", "mike@globex.com", "initech.com"] }
+GET  /api/v1/autoleads/lookalike?id=<job id>
+  $149/mo plan and up. Your customers' websites or work emails -> lookalike groups. POST starts a
+  background job (202 { job }); GET it until job.status is done (or failed). When done, job.groups:
+  [{ name, description, sites, database, filters, count, tool, addOn, reason }]. Send a group's
+  filters to that database's endpoint to pull the records. $0.01 per site read, from credits when the
+  job finishes; sites that can't be read are free. 402 = balance under $0.01 x every site (required,
+  available). 409 = a job is already running (job_id). At least 3 company sites; personal emails skipped.
+
 ────────────────────────────────────────
 ERROR CODES
 ────────────────────────────────────────

@@ -460,6 +460,38 @@ async function main() {
         break
       }
 
+      // ── Lookalike groups from your customers ($149/mo plan and up) ──
+      case 'lookalike': {
+        const file = flag('--file')
+        let domains = [...args]
+        if (typeof file === 'string') domains = [...domains, ...fs.readFileSync(file, 'utf-8').split(/[\n,;\t]+/).map(l => l.trim()).filter(Boolean)]
+        if (!domains.length) die('Usage: scrapercity lookalike acme.com mike@globex.com ... [--file customers.txt]')
+        const start = await sc.lookalikeStart(domains)
+        let job = start.job
+        console.log(`Job ${job.id}: ${job.sites} sites, up to $${Number(job.max_cost).toFixed(2)}`)
+        while (job.status === 'running') {
+          await new Promise(r => setTimeout(r, 10000))
+          job = (await sc.lookalikeJob(job.id)).job
+          process.stdout.write(`\r  ${job.stage} ${job.percent}%   `)
+        }
+        console.log('')
+        if (job.status !== 'done') die(job.error || 'The job did not finish.')
+        console.log(`${job.sites_read} of ${job.sites} sites read, $${Number(job.charged).toFixed(2)} charged, ${job.groups.length} groups`)
+        for (const g of job.groups) {
+          console.log(`\n${g.name} (${g.database}): ${Number(g.count).toLocaleString()} matches, ${g.sites.length} of your customers`)
+          console.log(`  ${g.description}`)
+          console.log(`  Best tool: ${g.tool}${g.addOn ? ' + ' + g.addOn : ''}`)
+          console.log(`  filters: ${JSON.stringify(g.filters)}`)
+        }
+        break
+      }
+
+      case 'lookalike-status': {
+        if (!args[0]) die('Usage: scrapercity lookalike-status <jobId>')
+        console.log(json((await sc.lookalikeJob(args[0])).job))
+        break
+      }
+
       // ── Poll (convenience) ────────────────────────────────
       case 'poll': {
         if (!args[0]) die('Usage: scrapercity poll <runId> [--interval 15]')
@@ -513,6 +545,11 @@ ScraperCity CLI - B2B lead generation from your terminal
   Plan ($149/mo plan and up):
     scrapercity plan "dentists in Austin"    Plain English -> ready-to-run database searches
       --database leads|local|ecommerce       Only this database (default: the ones that fit)
+
+  Lookalike groups ($149/mo plan and up, $0.01 per site read):
+    scrapercity lookalike acme.com mike@globex.com ...   Group your customers into lookalike audiences
+      --file customers.txt                   One website or work email per line
+    scrapercity lookalike-status <jobId>     Read a lookalike job
 
   Database ($149/mo plan and up):
     scrapercity db-leads [filters]           Query lead database
