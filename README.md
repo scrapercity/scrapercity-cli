@@ -1,6 +1,6 @@
 # ScraperCity - B2B Lead Generation for AI Agents
 
-Pull leads, validate emails, find mobile numbers, and scrape business data - all from your AI agent, CLI, or code.
+Pull leads, validate emails, find mobile numbers, and scrape business data - all from your AI agent, CLI, or code. One package: the MCP server, the CLI and the JavaScript SDK. The Python SDK is `pip install scrapercity`.
 
 ScraperCity gives AI agents access to 15+ B2B data tools: Apollo scraping, Google Maps extraction, email finding/validation, mobile number lookup, skip tracing, ecommerce store data, criminal records, and more.
 
@@ -66,6 +66,41 @@ curl -O https://app.scrapercity.com/api/downloads/RUN_ID \
   -H "Authorization: Bearer $SCRAPERCITY_API_KEY"
 ```
 
+### Option 5: JavaScript SDK
+
+```bash
+npm install scrapercity
+```
+
+```js
+import { configure, wallet, dbLeads, callTool, TOOLS, openaiTools, anthropicTools } from 'scrapercity'
+
+configure({ apiKey: process.env.SCRAPERCITY_API_KEY })
+await wallet()
+await dbLeads({ title: 'CEO', country: ['United States'], hasEmail: 'true', limit: 25 })
+
+// Every tool the MCP server offers, by name, with the same arguments
+await callTool('plan_search', { query: 'dentists in Austin, Texas' })
+
+// Hand the whole tool list to OpenAI or Anthropic tool calling
+const tools = openaiTools()        // or anthropicTools()
+```
+
+### Option 6: Python SDK
+
+```bash
+pip install scrapercity                 # add [langchain] or [openai] for agent tools
+```
+
+```python
+from scrapercity import ScraperCity, langchain_tools
+sc = ScraperCity()                      # reads SCRAPERCITY_API_KEY
+sc.call_tool("query_lead_database", {"title": "CEO", "limit": 10})
+tools = langchain_tools()               # LangChain / LangGraph
+```
+
+Both SDKs carry the same tool list as the MCP server, regenerated from the live API docs on every release. Guide: [scrapercity.com/sdk](https://scrapercity.com/sdk). Python package: [pypi.org/project/scrapercity](https://pypi.org/project/scrapercity/).
+
 ## Pricing (auto-generated from the live catalog — do not edit)
 
 <!-- GENERATED:pricing:start -->
@@ -84,7 +119,7 @@ curl -O https://app.scrapercity.com/api/downloads/RUN_ID \
 | `scrape_yelp` | /api/v1/scrape/yelp-scraper | $0.0099 per result |
 | `scrape_zillow_agents` | /api/v1/scrape/zillow-agents | $0.029 per agent |
 | `scrape_property_lookup` | /api/v1/scrape/property-lookup | $0.15 per property (+$0.10 for owner contact) |
-| `search_criminal_records` | /api/v1/scrape/criminal-records | .00 per search (only charged if records found) |
+| `search_criminal_records` | /api/v1/scrape/criminal-records | $1.00 per search (only charged if records found) |
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
@@ -146,6 +181,8 @@ Buy additional credits anytime. [scrapercity.com/pricing](https://scrapercity.co
 
 - [Agent Docs](https://scrapercity.com/agents) - setup guide
 - [API Reference](https://scrapercity.com/api-docs) - full documentation
+- [SDK guide](https://scrapercity.com/sdk) - JavaScript and Python SDKs
+- [Python SDK on PyPI](https://pypi.org/project/scrapercity/) - `pip install scrapercity`
 - [Skill File](https://scrapercity.com/agents/SKILL.md) - for Claude Code
 - [MCP Server Listing](https://scrapercity.com/agents) - configuration
 

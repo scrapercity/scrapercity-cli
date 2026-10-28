@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scrapercity"
+dynamic = ["version"]
+description = "ScraperCity Python SDK: B2B lead generation for AI agents and developers. Lead, local business and ecommerce databases, Google Maps, Apollo, email finder and validator, skip trace, with LangChain and OpenAI tools."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "ScraperCity" }]
+keywords = [
+  "scrapercity", "sdk", "api-client", "leads", "lead-generation", "b2b", "b2b-data", "lead-database",
+  "apollo", "google-maps", "email-finder", "email-validation", "skip-trace", "prospecting",
+  "contact-enrichment", "langchain", "langgraph", "openai", "openai-agents", "function-calling",
+  "tool-calling", "ai-agent", "mcp",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Office/Business",
+  "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+langchain = ["langchain-core>=0.2", "pydantic>=2"]
+openai = ["openai-agents>=0.1"]
+
+[project.urls]
+Homepage = "https://scrapercity.com/sdk"
+Documentation = "https://scrapercity.com/api-docs"
+Repository = "https://github.com/scrapercity/scrapercity-cli"
+Issues = "https://github.com/scrapercity/scrapercity-cli/issues"
+"MCP Server" = "https://scrapercity.com/mcp"
+
+[tool.setuptools]
+packages = ["scrapercity"]
+
+[tool.setuptools.dynamic]
+version = { attr = "scrapercity._catalog.VERSION" }

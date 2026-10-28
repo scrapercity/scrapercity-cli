@@ -36,20 +36,25 @@ test('planSearch posts the query, with the database only when given', async () =
 
 test('the MCP lists plan_search with a required query and an optional database', async () => {
   const p = spawn('node', [path.join(ROOT, 'bin/mcp.mjs')], { env: { ...process.env, SCRAPERCITY_API_KEY: 'k' } })
-  let buf = ''
+  let buf = '', err = ''
   p.stdout.on('data', d => { buf += d })
+  p.stderr.on('data', d => { err += d })
   const send = o => p.stdin.write(JSON.stringify(o) + '\n')
   send({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2024-11-05', capabilities: {}, clientInfo: { name: 't', version: '1' } } })
   send({ jsonrpc: '2.0', method: 'notifications/initialized' })
   send({ jsonrpc: '2.0', id: 2, method: 'tools/list' })
+  // Only complete lines are parsed (a big answer can arrive in pieces), and the timer and the server are
+  // always stopped, so a failure ends the test instead of leaving the run waiting forever.
+  let t, tick
   const list = await new Promise((resolve, reject) => {
-    const t = setTimeout(() => reject(new Error('no tools/list answer')), 5000)
-    const tick = setInterval(() => {
-      const m = buf.trim().split('\n').filter(Boolean).map(l => JSON.parse(l)).find(x => x.id === 2)
-      if (m) { clearTimeout(t); clearInterval(tick); resolve(m.result.tools) }
+    t = setTimeout(() => reject(new Error('no tools/list answer in 20s. server stderr: ' + err.slice(0, 500))), 20000)
+    tick = setInterval(() => {
+      for (const l of buf.split('\n').slice(0, -1)) {
+        let m; try { m = JSON.parse(l) } catch { continue }
+        if (m.id === 2) return resolve(m.result.tools)
+      }
     }, 50)
-  })
-  p.kill()
+  }).finally(() => { clearTimeout(t); clearInterval(tick); p.kill() })
   const tool = list.find(t => t.name === 'plan_search')
   assert.ok(tool)
   assert.deepEqual(tool.inputSchema.required, ['query'])

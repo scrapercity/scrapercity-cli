@@ -16,6 +16,8 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
+import { writePythonCatalog } from './python-catalog.mjs'
+import { UTILITY_TOOLS } from '../lib/utilityTools.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
@@ -88,9 +90,12 @@ function priceMicroForKey(key, registry, env) {
   return null
 }
 const fmtDollars = (micro) => ('$' + (micro / 1_000_000).toFixed(4)).replace(/0+$/, '').replace(/\.$/, '')
+// Whole-cent prices print with two decimals ($1.00, $0.25); finer prices keep their digits ($0.0099).
+const fmtDisplay = (micro) => micro % 10000 === 0 ? '$' + (micro / 1_000_000).toFixed(2) : fmtDollars(micro)
 function formatEnvPrice(configPrice, micro) {
-  const s = fmtDollars(micro)
-  return /\$[\d,]+(\.\d+)?/.test(configPrice) ? configPrice.replace(/\$[\d,]+(\.\d+)?/, s) : `${s} (${configPrice})`
+  const s = fmtDisplay(micro)
+  // Replacer function: a plain "$1" replacement string is read as regex group 1 ("$1.00" printed ".00").
+  return /\$[\d,]+(\.\d+)?/.test(configPrice) ? configPrice.replace(/\$[\d,]+(\.\d+)?/, () => s) : `${s} (${configPrice})`
 }
 function parsePriceMicro(configPrice) {
   const mm = /\$([\d,]+(?:\.\d+)?)/.exec(configPrice || '')
@@ -233,16 +238,22 @@ async function main() {
   fs.writeFileSync(outPath, out)
   log(`wrote lib/catalog.generated.mjs — ${TOOLS.length} scraper tools generated from the config`)
 
+  // The Python SDK gets the same tool list (hand-written + generated), at the package.json version.
+  const version = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf-8')).version
+  const py = writePythonCatalog({ root: ROOT, utilityTools: UTILITY_TOOLS, scraperTools: TOOLS, endpointByTool: ENDPOINT_BY_TOOL, endpoints: ENDPOINTS, version, fail })
+  log(`wrote python/scrapercity/_catalog.py — ${py.count} tools, version ${version}`)
+
   // Regenerate doc pricing tables between markers.
   const rows = TOOLS.map(t => `| \`${t.name}\` | ${ENDPOINT_BY_TOOL[t.name]} | ${/Cost: (.*)\.$|the (\$[^ ]+) plan/.exec(t.description)?.[1] || t.description.split('Cost: ')[1]?.replace(/\.$/, '') || ''} |`).join('\n')
   const table = '| Tool | Endpoint | Price |\n|------|----------|-------|\n' + rows
   const START = '<!-- GENERATED:pricing:start -->', END = '<!-- GENERATED:pricing:end -->'
-  for (const f of ['SKILL.md', 'AGENT_DOCS.txt', 'README.md']) {
+  for (const f of ['SKILL.md', 'AGENT_DOCS.txt', 'README.md', 'python/README.md']) {
     const p = path.join(ROOT, f)
     if (!fs.existsSync(p)) continue
     let s = fs.readFileSync(p, 'utf-8')
     if (s.includes(START) && s.includes(END)) {
-      s = s.replace(new RegExp(START + '[\\s\\S]*?' + END), START + '\n' + table + '\n' + END)
+      // A replacer function: a plain replacement string would read "$1.00" as a regex group (it printed ".00").
+      s = s.replace(new RegExp(START + '[\\s\\S]*?' + END), () => START + '\n' + table + '\n' + END)
       fs.writeFileSync(p, s); log(`regenerated pricing table in ${f}`)
     }
   }
@@ -257,7 +268,7 @@ async function main() {
     log('DASHBOARD-ONLY — live in the registry but NOT usable over /api/v1/ yet:')
     for (const s of DASHBOARD_ONLY) log(`   ! ${s}  <-- re-appears in the MCP automatically once it works over /api/v1/ and is put back in scraperConfigs.ts`)
   }
-  if (CHECK && changed) fail('catalog changed — regenerated. Commit lib/catalog.generated.mjs (+ regenerated docs), then re-publish.')
+  if (CHECK && (changed || py.changed)) fail('catalog changed — regenerated. Commit lib/catalog.generated.mjs (+ regenerated docs), then re-publish.')
   log('OK')
 }
 main()

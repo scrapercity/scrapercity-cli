@@ -106,8 +106,12 @@ test('CLI db-local prints how places were read and the Lead Database suggestion'
   assert.match(out, /Lead Database has 420 people for this search by job title: https:\/\/app\.scrapercity\.com\/dashboard\/lead-database\?title=zzz/)
 })
 
-test('MCP query_local_business_database takes keyword and location (valid property names)', () => {
-  const src = fs.readFileSync(path.join(ROOT, 'bin', 'mcp.mjs'), 'utf-8')
-  assert.match(src, /keyword: \{ type: 'array', items: \{ type: 'string' \}/)
-  assert.match(src, /location: \{ type: 'array', items: \{ type: 'string' \}/)
+test('MCP query_local_business_database takes keyword and location (valid property names)', async () => {
+  const { TOOLS } = await import('../lib/tools.mjs')
+  const t = TOOLS.find(x => x.name === 'query_local_business_database')
+  assert.deepEqual(t.inputSchema.properties.keyword.type, 'array')
+  assert.deepEqual(t.inputSchema.properties.keyword.items, { type: 'string' })
+  assert.deepEqual(t.inputSchema.properties.location.type, 'array')
+  assert.deepEqual(t.inputSchema.properties.location.items, { type: 'string' })
+  for (const k of Object.keys(t.inputSchema.properties)) assert.match(k, /^[a-zA-Z0-9_.-]{1,64}$/)
 })

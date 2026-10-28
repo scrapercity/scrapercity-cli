@@ -5,6 +5,7 @@
 export SCRAPERCITY_API_KEY="your_key"   # get from app.scrapercity.com/dashboard/api-docs
 npx scrapercity wallet                   # verify balance
 ```
+Writing code instead? Use an SDK with the same tools as the MCP server: `npm install scrapercity` (`import { callTool } from 'scrapercity'`) or `pip install scrapercity` (`ScraperCity().call_tool(...)`, plus LangChain and OpenAI Agents tools). Guide: https://scrapercity.com/sdk
 
 ## Core Pattern
 Every scraper follows: **start → poll → download**
@@ -33,7 +34,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `scrape_yelp` | /api/v1/scrape/yelp-scraper | $0.0099 per result |
 | `scrape_zillow_agents` | /api/v1/scrape/zillow-agents | $0.029 per agent |
 | `scrape_property_lookup` | /api/v1/scrape/property-lookup | $0.15 per property (+$0.10 for owner contact) |
-| `search_criminal_records` | /api/v1/scrape/criminal-records | .00 per search (only charged if records found) |
+| `search_criminal_records` | /api/v1/scrape/criminal-records | $1.00 per search (only charged if records found) |
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
