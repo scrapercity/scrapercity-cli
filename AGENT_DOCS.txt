@@ -222,8 +222,10 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   100k/day limit; fetching a lead you already have again is free.
   Returns: { data: [...leads], pagination: { page, limit, total, totalPages, has_more, next_after }, rate_limit,
              search_translation? }
-  Lead fields include company_industry, company_size, employees_count, company_website,
-  company_annual_revenue, company_city, company_state, company_country, keywords.
+  Lead fields include twitter_url, facebook_url, company_industry, company_size,
+  employees_count, company_website, company_phone, company_annual_revenue,
+  company_total_funding, company_founded_year, company_city, company_state,
+  company_country, keywords.
   409 with filters_not_applied_yet: the company filters listed can't be used yet (company
   data still being prepared right after launch). Nothing is returned or counted; retry later
   or drop those filters.
