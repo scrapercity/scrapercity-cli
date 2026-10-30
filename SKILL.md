@@ -25,7 +25,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `scrape_website_finder` | /api/v1/scrape/website-finder | $0.0499 per contact found |
 | `find_people` | /api/v1/scrape/skip-trace | $0.0199 per result (searches with 0 matches are billed as 1 result) |
 | `scrape_distress_list` | /api/v1/scrape/distress-list | $0.05 per property |
-| `validate_emails` | /api/v1/scrape/email-validator | $0.0072 per email |
+| `validate_emails` | /api/v1/scrape/email-validator | $0.0017 per email |
 | `scrape_maps` | /api/v1/scrape/maps | $0.0099 per business |
 | `scrape_airbnb` | /api/v1/scrape/airbnb-email | $0.019 per result ($19.00 per 1,000) |
 | `scrape_bizbuysell` | /api/v1/scrape/bizbuysell-scraper | $0.0099 per listing |
