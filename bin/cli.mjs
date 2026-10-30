@@ -94,7 +94,7 @@ async function main() {
         console.log(`✓ Apollo scrape started`)
         console.log(`  Run ID: ${r.runId}`)
         console.log(`  ${r.message || ''}`)
-        console.log(`  Note: Apollo takes up to 4 days. Set up a webhook at app.scrapercity.com/dashboard/webhooks to get notified.`)
+        console.log(`  Note: Apollo usually takes 15-30 minutes. Set up a webhook at app.scrapercity.com/dashboard/webhooks to get notified.`)
         console.log(`  Check: scrapercity status ${r.runId}`)
         break
       }

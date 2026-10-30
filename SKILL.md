@@ -45,7 +45,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 
 | Slug | Input | Cost | Speed |
 |------|-------|------|-------|
-| `apollo` | `{url, count, fileName}` | $0.0039/lead | ~4 DAYS (use webhook) |
+| `apollo` | `{url, count, fileName}` | $0.0039/lead | usually 15-30 min (use webhook) |
 | `maps` | `{searchStringsArray:["query"], locationQuery, maxCrawledPlacesPerSearch}` | $0.01/place | 5-30 min |
 | `email-validator` | `{emails:["a@b.com"]}` | $0.0036/email | 1-10 min |
 | `email-finder` | `{contacts:[{first_name,last_name,domain}], autoValidateEmails, autoFindMobiles}` | $0.05/contact | 1-10 min |
@@ -65,10 +65,10 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `property-lookup` | `{addresses:["123 Main St, City, ST 12345"], includeOwnerContact:false}` | $0.15/address | 2-10 min |
 
 ## ⚠ Apollo Delivery
-Apollo scrapes take **up to 4 days** to deliver. Do NOT poll in a loop.
+Apollo scrapes usually take **15-30 minutes** to deliver; some lists take longer. Do NOT poll in a loop.
 - Set up a webhook at `app.scrapercity.com/dashboard/webhooks`
 - Webhook fires when results are ready with `{runId, fileName, leadsCount}`
-- If you must poll, check once per hour max
+- If you must poll, start after 15 minutes and check every few minutes, not in a tight loop
 
 ## Other Endpoints
 

@@ -53,7 +53,7 @@ apollo
     filters already in the Lead Database (ones you don't have), a dashboard link, and the
     /api/v1/database/leads call that returns them now.
   Cost: $0.0039/lead | Min 500, max 50000
-  DELIVERY: UP TO 4 DAYS. Use webhook, not polling.
+  DELIVERY: usually 15-30 minutes, some lists take longer. Use webhook, not polling.
   To filter by title/location/industry without a URL, use the Lead Database (below).
 
 maps
@@ -309,7 +309,7 @@ WORKFLOW EXAMPLES
 
 2. APOLLO SCRAPE (slow):
    POST /api/v1/scrape/apollo → get runId → configure webhook → wait for callback
-   Do NOT poll Apollo in a tight loop. Check once per hour at most.
+   Do NOT poll Apollo in a tight loop. Start after 15 minutes and check every few minutes.
 
 3. ENRICH PIPELINE:
    Apollo/Maps → download CSV → extract emails → POST email-validator → download validated CSV

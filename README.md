@@ -148,7 +148,7 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 2. **Poll status** (or use webhooks) → wait for `SUCCEEDED`
 3. **Download CSV** → leads with full contact info
 
-Apollo scrapes take 11-48+ hours. All other scrapers: 1-30 minutes. Store leads are instant.
+Apollo scrapes usually take 15-30 minutes. All other scrapers: 1-30 minutes. Store leads are instant.
 
 ## Authentication
 
