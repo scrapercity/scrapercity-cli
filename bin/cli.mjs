@@ -412,7 +412,7 @@ async function main() {
                         '--postal-code': 'postalCode', '--query': 'query', '--min-rating': 'minRating', '--max-rating': 'maxRating',
                         '--min-reviews': 'minReviews', '--max-reviews': 'maxReviews', '--page': 'page', '--limit': 'limit',
                         '--after': 'after', '--url': 'url', '--title': 'title', '--not-category': 'notCategory',
-                        '--box': 'box', '--keyword': 'keyword', '--location': 'location' }
+                        '--box': 'box', '--keyword': 'keyword', '--location': 'location', '--max-locations': 'maxLocations' }
         // List filters take commas: --category "Dentist,Orthodontist" sends both. Locations take semicolons, since a
         // place has commas of its own: --location "Houston, TX; Austin, TX"
         // (--keyword goes as typed: the server splits a list on commas and keeps "plumbers in Austin, TX" whole)
@@ -576,6 +576,7 @@ ScraperCity CLI - B2B lead generation from your terminal
       --category --country --state --city --postal-code --query --title
       --min-rating --max-rating --min-reviews --max-reviews
       --has-email --has-phone --has-website --has-contact (only businesses with a named contact person)
+      --max-locations 3                      Skip businesses with over 3 locations (businesses with the same website)
       --not-category
       --box "minLat,minLng,maxLat,maxLng"    Only businesses inside this map area
       --url "<Google Maps search URL>"  Search with that URL's keyword and place

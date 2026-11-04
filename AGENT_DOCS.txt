@@ -247,6 +247,10 @@ GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=tru
   query (business name and description), title (business name, comma separated for several),
   minRating, maxRating, minReviews, maxReviews,
   hasEmail, hasPhone, hasWebsite, hasContact (only businesses with a named contact person).
+  maxLocations=3: skip businesses with over 3 locations (the businesses in the database with the
+           same website, so chains are left out; a business with no website is never skipped). A whole
+           number, 1 or more; anything else returns 400. 503 while the locations data is not ready yet:
+           retry later or search without it (it is never ignored).
   box=minLat,minLng,maxLat,maxLng: only businesses inside that map area (a box that can't be
            read returns 400).
   Exclusions: notCategory (repeat for several)

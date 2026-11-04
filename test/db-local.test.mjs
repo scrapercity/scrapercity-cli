@@ -115,3 +115,40 @@ test('MCP query_local_business_database takes keyword and location (valid proper
   assert.deepEqual(t.inputSchema.properties.location.items, { type: 'string' })
   for (const k of Object.keys(t.inputSchema.properties)) assert.match(k, /^[a-zA-Z0-9_.-]{1,64}$/)
 })
+
+test('query_local_business_database takes maxLocations (skip chains) and sends it on', async () => {
+  const { TOOLS, callTool } = await import('../lib/tools.mjs')
+  const tool = TOOLS.find(t => t.name === 'query_local_business_database')
+  assert.equal(tool.inputSchema.properties.maxLocations.type, 'integer')
+  assert.equal(tool.inputSchema.properties.maxLocations.minimum, 1)
+  assert.match(tool.description, /maxLocations/)
+  const calls = await withFetch(() => callTool('query_local_business_database', { category: ['Dentist'], country: ['US'], maxLocations: 3, hasEmail: true }))
+  const u = new URL(calls[0].url)
+  assert.equal(u.pathname, '/api/v1/database/local-businesses')
+  assert.equal(u.searchParams.get('maxLocations'), '3')
+  assert.equal(u.searchParams.get('hasEmail'), 'true')
+})
+
+test('CLI db-local passes --max-locations', () => {
+  const c = capture()
+  execFileSync(process.execPath, ['--import', CAPTURE_MOD, path.join(ROOT, 'bin', 'cli.mjs'), 'db-local',
+    '--category', 'Dentist', '--max-locations', '5'],
+  { env: { ...process.env, SC_CAPTURE: c.file, SCRAPERCITY_API_KEY: 'k' }, stdio: 'pipe' })
+  const [r] = c.read()
+  const u = new URL(r.url)
+  assert.equal(u.pathname, '/api/v1/database/local-businesses')
+  assert.equal(u.searchParams.get('maxLocations'), '5')
+  assert.deepEqual(u.searchParams.getAll('category'), ['Dentist'])
+})
+
+test('the Python SDK catalog carries the same query_local_business_database (maxLocations included)', async () => {
+  const { UTILITY_TOOLS } = await import('../lib/utilityTools.mjs')
+  const py = fs.readFileSync(path.join(ROOT, 'python', 'scrapercity', '_catalog.py'), 'utf-8')
+  const m = py.match(/^TOOLS = json\.loads\((".*")\)$/m)
+  assert.ok(m, 'TOOLS line in _catalog.py')
+  const pyTools = JSON.parse(JSON.parse(m[1]))
+  const want = UTILITY_TOOLS.find(t => t.name === 'query_local_business_database')
+  const got = pyTools.find(t => t.name === 'query_local_business_database')
+  assert.deepEqual(got, want)
+  assert.equal(got.inputSchema.properties.maxLocations.type, 'integer')
+})
