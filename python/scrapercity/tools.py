@@ -55,7 +55,7 @@ _UTILITY_HANDLERS: Dict[str, Callable] = {
     "find_lookalike_groups": lambda sc, a: sc.lookalike_start(a.get("domains")),
     "get_lookalike_groups": lambda sc, a: sc.lookalike_job(a.get("id")),
     "download_lookalike_csv": _lookalike_csv,
-    "query_lead_database": lambda sc, a: sc.query_leads(**_db_params(a, ["hasEmail", "hasPhone", "excludeDelivered"])),
+    "query_lead_database": lambda sc, a: sc.query_leads(**_db_params(a, ["hasEmail", "hasPhone", "excludeDelivered", "replaceLeftContacts"])),
     "query_local_business_database": lambda sc, a: sc.query_local_businesses(
         **_db_params(a, ["hasEmail", "hasPhone", "hasWebsite", "hasContact", "excludeDelivered"])),
     "query_ecommerce_database": lambda sc, a: sc.query_ecommerce(

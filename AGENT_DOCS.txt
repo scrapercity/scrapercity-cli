@@ -322,6 +322,12 @@ WORKFLOW EXAMPLES
 4. LEAD DATABASE (instant):
    GET /api/v1/database/leads?title=CTO&industry=computer+software&hasEmail=true&page=1
    Loop pages until page > totalPages
+   Every lead carries email_check_status (valid, valid_catch_all, invalid, unknown, not_checked) and email_checked_on:
+   send ONLY to valid emails checked in the last 30 days; put every other email through email-validator first.
+   Before sending: add replaceLeftContacts=true, wait for replacement.run_id (GET /api/v1/scrape/status/{run_id}),
+   then send the CSV from GET /api/downloads/{run_id}: every email checked, people who have left swapped for the person
+   in that role now ($0.02 per contact replaced, free on the $649 plan). At minimum: POST the emails to email-validator
+   and send only to the valid ones.
 
 5. LOCAL BUSINESS PIPELINE:
    Yelp/Angi/Maps → download CSV → POST email-finder with names+domains → POST mobile-finder
@@ -332,3 +338,6 @@ WORKFLOW EXAMPLES
 7. LOCAL BUSINESS DATABASE (instant):
    GET /api/v1/database/local-businesses?keyword=dentist&location=Austin%2C+TX&hasEmail=true&page=1
    Loop pages until page > totalPages
+   Every business carries email_check_status / contact_email_check_status and their checked_on dates:
+   send ONLY to valid emails checked in the last 30 days; put every other email through email-validator first.
+   Before sending: POST the emails to email-validator and send only to the valid ones.

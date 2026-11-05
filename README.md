@@ -143,6 +143,10 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | **Lead Database** | 3M+ B2B contacts, instant query ($149/mo plan and up) | Included |
 | **Local Business Database** | Local businesses with phones, emails and ratings, instant query ($149/mo plan and up) | Included |
 
+## Before You Send
+
+Leads from any database: check them before outreach. Every record carries `email_check_status` (our own email checker: valid, valid_catch_all, invalid, unknown, not_checked): send ONLY to `valid` emails checked in the last 30 days (`email_checked_on`), and put every other email through `validate_emails` first. For people (Lead Database), pass `replaceLeftContacts: true` to `query_lead_database`; the response adds `replacement.run_id`, a run that checks every email and swaps each person who has left for the person in that role now. Wait for it with `check_run_status`, then send the CSV from `download_results` ($0.02 per contact replaced, free on the $649 plan). At minimum, run the emails through `validate_emails` and send only to the valid ones.
+
 ## How It Works
 
 1. **Start a scrape** → get a `runId`

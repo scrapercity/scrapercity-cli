@@ -395,9 +395,11 @@ async function main() {
         if (flagBool('--has-email')) params.hasEmail = 'true'
         if (flagBool('--has-phone')) params.hasPhone = 'true'
         if (flagBool('--exclude-delivered')) params.excludeDelivered = 'true'
+        if (flagBool('--replace-left-contacts')) params.replaceLeftContacts = 'true'
         const r = await sc.dbLeads(params)
         console.log(`${r.pagination?.total || '?'} total leads, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
         if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
+        if (r.replacement?.run_id) console.log(`Contacts who have left are being replaced: scrapercity status ${r.replacement.run_id}, then scrapercity download ${r.replacement.run_id}`)
         const tr = r.search_translation || r.apollo_translation
         if (tr?.not_supported?.length) console.log(`Not supported from the search URL: ${tr.not_supported.join(', ')}`)
         console.log(json(r.data?.slice(0, 3) || r))
@@ -569,6 +571,7 @@ ScraperCity CLI - B2B lead generation from your terminal
       --technologies --technologies-all --not-technologies   Website technologies: any of / all of / none of (comma separated)
       --url "<people-search URL>"  Search with that URL's filters
       --exclude-delivered                    Only leads you don't already have
+      --replace-left-contacts                Also start a run that swaps contacts who have left for the person in that role now
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
     scrapercity db-local [filters]           Query local business database
       --keyword "thai restaurant,sushi"      What the businesses do or are called (any of them)
