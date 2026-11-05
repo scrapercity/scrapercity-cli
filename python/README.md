@@ -105,7 +105,7 @@ Scrapers charge per result from your credits. The database tools are included wi
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
-| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
+| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found, valid or catch-all (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
 <!-- GENERATED:pricing:end -->
 

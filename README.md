@@ -123,7 +123,7 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
-| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
+| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found, valid or catch-all (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
 <!-- GENERATED:pricing:end -->
 
@@ -134,7 +134,7 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | **Apollo** | B2B contacts by job title, industry, location | $0.0039/lead |
 | **Google Maps** | Local businesses with phones, emails, reviews | $0.01/place |
 | **Email Validator** | Verify deliverability, catch-all, MX records | $0.0036/email |
-| **Email Finder** | Find business email from name + company | $0.05/contact |
+| **Email Finder** | Find business email from name + company | $0.05/email found (valid or catch-all) |
 | **Mobile Finder** | Phone numbers from LinkedIn or email | $0.25/input |
 | **People Finder** | Skip trace by name, email, phone, address | $0.02/result |
 | **Store Leads** | Shopify/WooCommerce stores with contacts | $0.0039/lead |
