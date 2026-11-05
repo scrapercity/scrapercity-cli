@@ -447,6 +447,14 @@ async function main() {
       }
 
       // ── Plan: plain English -> database searches ($149/mo plan and up) ──
+      // ── Start here (no key needed) ──
+      case 'start': {
+        const query = args.join(' ').trim()
+        const r = await sc.startHere(query || undefined)
+        console.log(json(r))
+        break
+      }
+
       case 'plan': {
         const database = flag('--database')
         const query = args.join(' ').trim()
@@ -462,7 +470,7 @@ async function main() {
         break
       }
 
-      // ── Lookalike groups from your customers ($149/mo plan and up) ──
+      // ── Lookalike groups from your customers (every plan, $0.01 per site read) ──
       case 'lookalike': {
         const file = flag('--file')
         let domains = [...args]
@@ -521,6 +529,10 @@ async function main() {
         console.log(`
 ScraperCity CLI - B2B lead generation from your terminal
 
+  Start here (no API key needed):
+    scrapercity start "dentists in Austin"   Guided tour: what ScraperCity is, signup, plans and trial,
+                                             real searches with live counts (with a key: your account's plan)
+
   Auth:
     scrapercity login [key]                  Save API key to ~/.scrapercityrc
     scrapercity wallet                       Check balance and plan
@@ -552,17 +564,17 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity logs <runId>                 View run logs
     scrapercity runs [--hours 24]            List recent runs
 
-  Plan ($149/mo plan and up):
+  Plan (every plan, trials included):
     scrapercity plan "dentists in Austin"    Plain English -> ready-to-run database searches
       --database leads|local|ecommerce       Only this database (default: the ones that fit)
 
-  Lookalike groups ($149/mo plan and up, $0.01 per site read):
+  Lookalike groups (every plan, $0.01 per site read):
     scrapercity lookalike acme.com mike@globex.com ...   Group your customers into lookalike audiences
       --file customers.txt                   One website or work email per line
     scrapercity lookalike-status <jobId>     Read a lookalike job
     scrapercity lookalike-csv <jobId> [-o f.csv]  Every site of a finished job as a CSV
 
-  Database ($149/mo plan and up):
+  Database (included on $149/mo and up; per record from credits on a trial or $49):
     scrapercity db-leads [filters]           Query lead database
       --title --industry --country --state --city --company --domain --seniority --department
       --min-employees --max-employees --has-email --has-phone

@@ -18,6 +18,12 @@ from urllib.request import Request, urlopen
 from scrapercity._catalog import ENDPOINT_BY_TOOL, ENDPOINTS, TOOLS, VERSION
 
 BASE_URL = "https://app.scrapercity.com"
+NO_KEY_MESSAGE = (
+    "No ScraperCity API key yet. Pass api_key= or set SCRAPERCITY_API_KEY. "
+    "scrapercity.start_here() needs no key: it explains ScraperCity, the plans and the trial, and runs real "
+    "searches with live counts. To get a key, sign up at https://app.scrapercity.com/signup and copy it from "
+    "https://app.scrapercity.com/dashboard/api-docs."
+)
 USER_AGENT = f"scrapercity-python/{VERSION}"
 
 # A query string past ~16KB is refused by the server before the search runs, so a long database
@@ -65,10 +71,7 @@ class ScraperCity:
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None, timeout: float = 120):
         self.api_key = api_key or os.environ.get("SCRAPERCITY_API_KEY") or self._load_rc()
         if not self.api_key:
-            raise ValueError(
-                "No API key. Pass api_key= or set SCRAPERCITY_API_KEY env var. "
-                "Get yours at scrapercity.com"
-            )
+            raise ValueError(NO_KEY_MESSAGE)
         self.base_url = (base_url or os.environ.get("SCRAPERCITY_BASE_URL") or BASE_URL).rstrip("/")
         self.timeout = timeout
 
@@ -302,6 +305,10 @@ class ScraperCity:
         """Query the ecommerce store database."""
         return self._db("database-ecommerce", "/api/v1/database/ecommerce", params, post_when_long=False)
 
+    def start_here(self, query: Optional[str] = None) -> dict:
+        """START HERE: the plan for this account for a request (segments or searches, their cost, the next call)."""
+        return self._post(_ep("start", "/api/v1/start"), {"query": query} if query else {})
+
     def plan_search(self, query: str, database: Optional[str] = None) -> dict:
         """Turn plain English into ready-to-run database searches. database: 'leads', 'local' or 'ecommerce'."""
         body = {"query": query}
@@ -309,7 +316,7 @@ class ScraperCity:
             body["database"] = database
         return self._post(_ep("database-plan", "/api/v1/database/plan"), body)
 
-    # ── Lookalike groups ($149/mo plan and up) ─────────────────
+    # ── Lookalike groups (every plan, trials included) ────────────
     def lookalike_start(self, domains: list) -> dict:
         """Group your customers (websites or work emails) into lookalike audiences. Returns the job."""
         return self._post(_ep("autoleads-lookalike", "/api/v1/autoleads/lookalike"), {"domains": domains})
@@ -327,6 +334,28 @@ class ScraperCity:
     def post_endpoint(self, endpoint: str, body: dict) -> Any:
         """POST a body straight to a full endpoint path (how generated scraper tools run)."""
         return self._post(endpoint, body)
+
+
+def start_here(query: Optional[str] = None, base_url: Optional[str] = None, timeout: float = 60) -> dict:
+    """START HERE, with no API key: a guided tour of ScraperCity (signing up, the plans and the trial, and real
+    searches with live counts for ``query``). With a key, use ScraperCity().start_here(query) for the account's plan."""
+    url = (base_url or os.environ.get("SCRAPERCITY_BASE_URL") or BASE_URL).rstrip("/") + _ep("start", "/api/v1/start")
+    req = Request(url, data=json.dumps({"query": query} if query else {}).encode(), method="POST")
+    req.add_header("Content-Type", "application/json")
+    req.add_header("User-Agent", USER_AGENT)
+    try:
+        with urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read())
+    except HTTPError as e:
+        text = e.read().decode(errors="replace")
+        try:
+            data = json.loads(text)
+        except Exception:
+            data = {"raw": text}
+        if e.code == 429 and isinstance(data, dict):
+            return data  # a busy answer still carries the tour
+        msg = (data.get("error") or data.get("message")) if isinstance(data, dict) else None
+        raise ScraperCityError(msg or f"HTTP {e.code}", e.code, data) from e
 
 
 def tool_endpoint(name: str) -> Optional[str]:

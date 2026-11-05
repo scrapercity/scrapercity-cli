@@ -4,6 +4,16 @@ Pull leads, validate emails, find mobile numbers, and scrape business data - all
 
 ScraperCity gives AI agents access to 15+ B2B data tools: Apollo scraping, Google Maps extraction, email finding/validation, mobile number lookup, skip tracing, ecommerce store data, criminal records, and more.
 
+## Start Here (no API key needed)
+
+```bash
+npx scrapercity start "dentists in Austin"
+```
+
+Or have your agent call the `start_here` MCP tool, or `GET https://app.scrapercity.com/api/v1/start?query=...`. With no key you get a guided tour: what ScraperCity is, how to sign up, the plans and the trial with their live terms, and real searches with live counts. With a key it plans for your account and returns the exact next call.
+
+**The trial, plainly:** The trial is real usage, not a demo or a free tier: $5 of credit for 7 days that works on every tool and database at the normal prices, so you can pull real records on day one and judge the data. A card is required at signup. When the 7 days end, the plan picked at signup starts; cancel before then from billing and nothing more is charged. If the credit runs out sooner, database pulls wait (nothing is charged for them); a scraper run that goes past the credit starts the plan early. Planning searches and checking counts are free. start_here returns the live terms.
+
 ## Quick Start
 
 ### Option 1: CLI
@@ -140,8 +150,8 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | **Store Leads** | Shopify/WooCommerce stores with contacts | $0.0039/lead |
 | **BuiltWith** | All sites using a technology | $4.99/search |
 | **Criminal Records** | Background check by name | $1.00 if found |
-| **Lead Database** | 3M+ B2B contacts, instant query ($149/mo plan and up) | Included |
-| **Local Business Database** | Local businesses with phones, emails and ratings, instant query ($149/mo plan and up) | Included |
+| **Lead Database** | B2B contacts, instant query | Included on $149/mo and up; per new lead from credits below it |
+| **Local Business Database** | Local businesses with phones, emails and ratings, instant query | Included on $149/mo and up; per new business from credits below it |
 
 ## Before You Send
 
@@ -175,10 +185,10 @@ For Apollo and long-running scrapes, configure a webhook at [app.scrapercity.com
 
 | Plan | Price | Credits |
 |------|-------|---------|
-| Trial | Free | $5 |
-| Starter | $49/mo | $49 |
-| Growth | $149/mo | $149 + 10% bonus |
-| Professional | $649/mo | $649 + 30% bonus + Database API |
+| Trial | 7 days, card required, then the plan picked at signup | $5 of usage credit |
+| Starter | $49/mo | $49 (databases per record from credits) |
+| Growth | $149/mo | $149 + 10% bonus, databases included |
+| Scale | $649/mo | $649 + 30% bonus, databases included, higher limits |
 
 Buy additional credits anytime. [scrapercity.com/pricing](https://scrapercity.com/pricing)
 

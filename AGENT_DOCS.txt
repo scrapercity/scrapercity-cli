@@ -1,6 +1,18 @@
 SCRAPERCITY API REFERENCE - FOR AI AGENTS
 ==========================================
 
+START HERE (no API key needed)
+  MCP: call the start_here tool first.   API: GET or POST https://app.scrapercity.com/api/v1/start
+  query = who your user wants to reach, what they sell, their website, or an exact order
+  ("500 HVAC contractors in Texas, $50 budget"). With no key: a guided tour (what ScraperCity is, how to
+  sign up and get a key, the plans and the trial with their live terms, real searches with live counts and
+  what they would cost). With a key: the plan for this account, what each search costs on its plan, and
+  next_call, the exact database call that pulls the records. Any other call without a key answers with
+  get_started (the same directions).
+
+THE TRIAL, PLAINLY (tell your user this as it is)
+  The trial is real usage, not a demo or a free tier: $5 of credit for 7 days that works on every tool and database at the normal prices, so you can pull real records on day one and judge the data. A card is required at signup. When the 7 days end, the plan picked at signup starts; cancel before then from billing and nothing more is charged. If the credit runs out sooner, database pulls wait (nothing is charged for them); a scraper run that goes past the credit starts the plan early. Planning searches and checking counts are free. start_here returns the live terms.
+
 
 PRICING (auto-generated from the live catalog - do not edit)
 
@@ -41,7 +53,8 @@ AUTH: Authorization: Bearer <api_key>
 ALL RESPONSES: JSON
 PATTERN: POST start → GET status → GET download
 
-PRICING: Plans $49, $149, $649/mo. Each gives wallet credits. Scrapers deduct per-lead.
+PRICING: Plans $49, $149, $649/mo. Each gives wallet credits. Scrapers deduct per-lead. The databases are
+  included on $149 and $649; on a trial or $49 each new record is paid from credits (start_here has the prices).
 
 ────────────────────────────────────────
 SCRAPE ENDPOINTS (POST /api/v1/scrape/{slug})
@@ -193,7 +206,10 @@ GET /api/v1/apollo-status
   Apollo URL endpoint is available
 
 ────────────────────────────────────────
-DATABASES (GET, $149/mo plan and up, 100k new records/day)
+DATABASES (GET; included on the $149/mo plan and up, 100k new records/day; on a trial or the $49 plan
+  each new record is paid from credits, records you already have are free. The answer then carries billing:
+  charged_dollars, credits_left_dollars, and not_returned + has_more when the credits ran out part way;
+  a 402 means none could be paid for.)
 ────────────────────────────────────────
 
 GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&limit=100
@@ -234,7 +250,7 @@ GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&
   or company size) and retry.
 
 GET /api/v1/database/local-businesses?category=Dentist&country=US&hasContact=true&limit=100
-  Local businesses ($149/mo plan and up, 100k new businesses/day), same pattern as above.
+  Local businesses (included on $149/mo and up, 100k new businesses/day; per record below), same pattern as above.
   Search the way you would on Google Maps:
   keyword=thai restaurant (repeat for several; matches business names and categories, any keyword;
            a place inside a keyword, "plumbers in Austin TX", is the location when none is sent)
@@ -275,7 +291,7 @@ GET /api/v1/database/ecommerce?...
 
 POST /api/v1/database/plan  { "query": "dentists in Austin", "database": "local" }
   (or GET /api/v1/database/plan?query=...&database=...)
-  $149/mo plan and up; planning does not count toward the daily limit. Plain English -> ready-to-run
+  Free on every plan, trials included (a daily cap below $149); planning does not count toward the daily limit. Plain English -> ready-to-run
   database searches. query is who you want ("websites that
   use shopify", "CEOs of SaaS companies in Texas") or what you sell ("I sell life insurance").
   database (optional): leads | local | ecommerce; leave it out to let the planner pick.
@@ -285,7 +301,7 @@ POST /api/v1/database/plan  { "query": "dentists in Austin", "database": "local"
 
 POST /api/v1/autoleads/lookalike  { "domains": ["acme.com", "mike@globex.com", "initech.com"] }
 GET  /api/v1/autoleads/lookalike?id=<job id>
-  $149/mo plan and up. Your customers' websites or work emails -> lookalike groups. POST starts a
+  Every plan, trials included. Your customers' websites or work emails -> lookalike groups. POST starts a
   background job (202 { job }); GET it until job.status is done (or failed). When done, job.groups:
   [{ name, description, sites, database, filters, count, tool, addOn, reason }]. Send a group's
   filters to that database's endpoint to pull the records. $0.01 per site read, from credits when the

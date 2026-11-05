@@ -46,6 +46,7 @@ def _lookalike_csv(sc, a):
 
 
 _UTILITY_HANDLERS: Dict[str, Callable] = {
+    "start_here": lambda sc, a: sc.start_here(a.get("query")),
     "check_wallet": lambda sc, a: sc.wallet(),
     "list_runs": lambda sc, a: sc.runs(a.get("hours") or 24, a.get("limit") or 20),
     "check_run_status": lambda sc, a: sc.status(_arg(a, "runId", "run_id")),

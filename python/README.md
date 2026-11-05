@@ -10,6 +10,10 @@ pip install "scrapercity[langchain]"   # LangChain / LangGraph tools
 pip install "scrapercity[openai]"      # OpenAI Agents SDK tools
 ```
 
+**No key yet?** `scrapercity.start_here("dentists in Austin")` needs none: a guided tour with what ScraperCity is, how to sign up, the plans and the trial with their live terms, and real searches with live counts. With a key, `ScraperCity().start_here(...)` plans for your account and returns the exact next call.
+
+**The trial, plainly:** The trial is real usage, not a demo or a free tier: $5 of credit for 7 days that works on every tool and database at the normal prices, so you can pull real records on day one and judge the data. A card is required at signup. When the 7 days end, the plan picked at signup starts; cancel before then from billing and nothing more is charged. If the credit runs out sooner, database pulls wait (nothing is charged for them); a scraper run that goes past the credit starts the plan early. Planning searches and checking counts are free. start_here() returns the live terms.
+
 Get your API key at [app.scrapercity.com/dashboard/api-docs](https://app.scrapercity.com/dashboard/api-docs), then `export SCRAPERCITY_API_KEY=your_key` (or pass it to `ScraperCity("your_key")`).
 
 ## Quick start
@@ -21,7 +25,7 @@ sc = ScraperCity()  # reads SCRAPERCITY_API_KEY
 
 print(sc.wallet())  # balance and plan
 
-# Instant database search ($149/mo plan and up)
+# Instant database search (included on $149/mo and up; per record from credits on a trial or $49)
 leads = sc.query_leads(title="Head of Marketing", country=["United States"], hasEmail=True, limit=25)
 
 # Not sure of the filter values? Describe who you want in plain English.
@@ -83,7 +87,7 @@ A failed call raises `scrapercity.ScraperCityError` with the API's message, `.st
 
 ## Pricing
 
-Scrapers charge per result from your credits. The database tools are included with the $149/mo plan and up. Prices below come from the live catalog on each release.
+Scrapers charge per result from your credits. The database tools are included with the $149/mo plan and up; on a trial or the $49 plan each new record is paid from credits. Prices below come from the live catalog on each release.
 
 <!-- GENERATED:pricing:start -->
 | Tool | Endpoint | Price |
