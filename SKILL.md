@@ -38,7 +38,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `scrape_store_leads` | /api/v1/scrape/store-leads | $0.0039 per lead |
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
-| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found, valid or catch-all (FREE if not found) |
+| `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
 <!-- GENERATED:pricing:end -->
 
@@ -49,7 +49,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `apollo` | `{url, count, fileName}` | $0.0039/lead | usually 15-30 min (use webhook) |
 | `maps` | `{searchStringsArray:["query"], locationQuery, maxCrawledPlacesPerSearch}` | $0.01/place | 5-30 min |
 | `email-validator` | `{emails:["a@b.com"]}` | $0.0036/email | 1-10 min |
-| `email-finder` | `{contacts:[{first_name,last_name,domain}], autoValidateEmails, autoFindMobiles}` | $0.05/email found, valid or catch-all; free if none | 1-10 min |
+| `email-finder` | `{contacts:[{first_name,last_name,domain}], autoValidateEmails, autoFindMobiles}` | $0.05/contact | 1-10 min |
 | `mobile-finder` | `{inputs:["linkedin.com/in/x","email@co.com"]}` | $0.25/input | 1-5 min |
 | `people-finder` | `{name:[], email:[], phone_number:[], street_citystatezip:[], max_results}` | $0.02/result | 2-10 min |
 | `store-leads` | `{platform, countryCode, totalLeads, emails:true, phones:true}` | $0.0039/lead | instant |
