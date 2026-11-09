@@ -356,4 +356,7 @@ WORKFLOW EXAMPLES
    Loop pages until page > totalPages
    Every business carries email_check_status / contact_email_check_status and their checked_on dates:
    send ONLY to valid emails checked in the last 30 days; put every other email through email-validator first.
-   Before sending: POST the emails to email-validator and send only to the valid ones.
+   Before sending: add replaceLeftContacts=true, wait for replacement.run_id (GET /api/v1/scrape/status/{run_id}),
+   then send the CSV from GET /api/downloads/{run_id}: each contact person checked, one who has left swapped for the
+   person in that role now ($0.02 per contact replaced, free on the $649 plan). At minimum: POST the emails to
+   email-validator and send only to the valid ones.

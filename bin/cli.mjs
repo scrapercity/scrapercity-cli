@@ -430,9 +430,11 @@ async function main() {
         if (flagBool('--has-website')) params.hasWebsite = 'true'
         if (flagBool('--has-contact')) params.hasContact = 'true'
         if (flagBool('--exclude-delivered')) params.excludeDelivered = 'true'
+        if (flagBool('--replace-left-contacts')) params.replaceLeftContacts = 'true'
         const r = await sc.dbLocalBusinesses(params)
         console.log(`${r.pagination?.total || '?'} total businesses, page ${r.pagination?.page || 1} of ${r.pagination?.totalPages || '?'}`)
         if (r.pagination?.next_after) console.log(`Next page: --after ${r.pagination.next_after}`)
+        if (r.replacement?.run_id) console.log(`Contacts who have left are being replaced: scrapercity status ${r.replacement.run_id}, then scrapercity download ${r.replacement.run_id}`)
         if (r.search_translation?.not_supported?.length) console.log(`Not supported from the search URL: ${r.search_translation.not_supported.join(', ')}`)
         if (r.searched_as) {
           const places = (r.searched_as.places || []).map(p => p.not_found ? `${p.text} (not found)` : p.read_as)
@@ -596,6 +598,7 @@ ScraperCity CLI - B2B lead generation from your terminal
       --box "minLat,minLng,maxLat,maxLng"    Only businesses inside this map area
       --url "<Google Maps search URL>"  Search with that URL's keyword and place
       --exclude-delivered                    Only businesses you don't already have
+      --replace-left-contacts                Also start a run that swaps contact people who have left for the person in that role now
       --after <id>                           Cursor paging (start with 0, then use the printed next id)
 
   Env: SCRAPERCITY_API_KEY=...  or  scrapercity login

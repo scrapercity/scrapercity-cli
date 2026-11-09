@@ -58,9 +58,9 @@ _UTILITY_HANDLERS: Dict[str, Callable] = {
     "download_lookalike_csv": _lookalike_csv,
     "query_lead_database": lambda sc, a: sc.query_leads(**_db_params(a, ["hasEmail", "hasPhone", "excludeDelivered", "replaceLeftContacts"])),
     "query_local_business_database": lambda sc, a: sc.query_local_businesses(
-        **_db_params(a, ["hasEmail", "hasPhone", "hasWebsite", "hasContact", "excludeDelivered"])),
+        **_db_params(a, ["hasEmail", "hasPhone", "hasWebsite", "hasContact", "excludeDelivered", "replaceLeftContacts"])),
     "query_ecommerce_database": lambda sc, a: sc.query_ecommerce(
-        **_db_params(a, ["hasEmail", "hasPhone", "hasInstagram", "hasFacebook", "hasTiktok", "excludeDelivered"])),
+        **_db_params(a, ["hasEmail", "hasPhone", "hasInstagram", "hasFacebook", "hasTiktok", "excludeDelivered", "replaceLeftContacts"])),
 }
 
 
