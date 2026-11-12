@@ -66,7 +66,8 @@ apollo
     lead_database (when there are matches): { matches, url, api } - leads with the same
     filters already in the Lead Database (ones you don't have), a dashboard link, and the
     /api/v1/database/leads call that returns them now.
-  Cost: $0.0039/lead | Min 500, max 50000
+  Cost: $0.0039/lead | Min 1000. One run takes at least 50000 and up to 1000000, depending on current
+  capacity; a larger count is capped to that size (the message says so): send the rest as another run.
   DELIVERY: usually 15-30 minutes, some lists take longer. Use webhook, not polling.
   To filter by title/location/industry without a URL, use the Lead Database (below).
 
