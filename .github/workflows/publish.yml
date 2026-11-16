@@ -1,0 +1,25 @@
+# Publishes the npm package when a version tag (v1.2.3) is pushed. npm trusted publishing (OIDC): no token is stored
+# anywhere. The catalog check and the PyPI release run on the box before the tag is pushed (scripts/publish-python.sh),
+# so prepublishOnly is skipped here with --ignore-scripts.
+name: publish
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@latest
+      - name: tag matches package.json
+        run: test "v$(node -p "require(\"./package.json\").version")" = "${GITHUB_REF_NAME}"
+      - run: npm install --ignore-scripts --no-package-lock
+      - run: npm test
+      - run: npm publish --provenance --access public --ignore-scripts
