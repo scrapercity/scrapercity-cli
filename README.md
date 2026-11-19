@@ -134,6 +134,7 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | `scrape_builtwith` | /api/v1/scrape/techstack | $4.99 per technology |
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
 | `scrape_ucc_filings` | /api/v1/scrape/ucc-filings | $0.0028 per filing |
+| `scrape_job_scraper` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
 <!-- GENERATED:pricing:end -->
