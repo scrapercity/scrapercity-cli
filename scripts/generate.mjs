@@ -37,6 +37,10 @@ const NAME_OVERRIDE = {
   'yelp-scraper': 'scrape_yelp',
   'angi-angies-list-scraper': 'scrape_angi',
   'crexi-scraper': 'scrape_crexi',
+  // Outcome names: no tool name or description puts scraper wording next to LinkedIn. Both shipped Nov 19 2026 under
+  // scrape_* names and were renamed the same day.
+  'linkedin-post-engagers': 'find_linkedin_post_engagers',
+  'job-scraper': 'find_job_posts',
 }
 const toolName = (key) => NAME_OVERRIDE[key] || 'scrape_' + key.replace(/-/g, '_')
 

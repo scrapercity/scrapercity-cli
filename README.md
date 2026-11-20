@@ -136,9 +136,9 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | `scrape_ucc_filings` | /api/v1/scrape/ucc-filings | $0.0028 per filing |
 | `scrape_facebook_pages` | /api/v1/scrape/facebook-pages | $0.0012 per page from page links, $0.0028 per page from a search |
 | `scrape_website_contacts` | /api/v1/scrape/website-contacts | $0.004 per website with an email or phone found |
-| `scrape_job_scraper` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
+| `find_job_posts` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `scrape_instagram_leads` | /api/v1/scrape/instagram-leads | $0.0023 per profile found by keyword or hashtag, $0.0006 per profile from your own list |
-| `scrape_linkedin_post_engagers` | /api/v1/scrape/linkedin-post-engagers | $0.004 per person |
+| `find_linkedin_post_engagers` | /api/v1/scrape/linkedin-post-engagers | $0.004 per person |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
 <!-- GENERATED:pricing:end -->
