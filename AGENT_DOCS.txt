@@ -60,7 +60,7 @@ PRICING (auto-generated from the live catalog - do not edit)
 | `scrape_facebook_marketplace` | /api/v1/scrape/facebook-marketplace | $0.0015 per listing |
 | `scrape_facebook_events` | /api/v1/scrape/facebook-events | $0.0259 per event |
 | `scrape_threads_posts` | /api/v1/scrape/threads-posts | $0.0047 per post by keyword, $0.0058 per post from profiles |
-| `scrape_google_ads` | /api/v1/scrape/google-ads | $0.0001 per ad |
+| `scrape_google_ads` | /api/v1/scrape/google-ads | $0.00142 per ad |
 | `find_linkedin_post_engagers` | /api/v1/scrape/linkedin-post-engagers | $0.004 per person |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
