@@ -111,6 +111,13 @@ Scrapers charge per result from your credits. The database tools are included wi
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
 | `scrape_ucc_filings` | /api/v1/scrape/ucc-filings | $0.0028 per filing |
 | `scrape_facebook_pages` | /api/v1/scrape/facebook-pages | $0.0012 per page from page links, $0.0028 per page from a search |
+| `scrape_bulk_llm_prompts` | /api/v1/scrape/bulk-llm-prompts | $0.00005 per 1,000 tokens (prompts plus answers, the run's total), minimum charge $0.107 a run |
+| `scrape_ai_for_every_row` | /api/v1/scrape/ai-for-every-row | $0.00012 per 1,000 tokens (each row counts at least 1,000), minimum charge $0.107 a run |
+| `scrape_ai_image_upscaler` | /api/v1/scrape/ai-image-upscaler | $0.0017 per image upscaled, minimum charge $0.058 a run |
+| `scrape_ai_image_generator` | /api/v1/scrape/ai-image-generator | $0.0038 per image up to about 1.1 megapixels (a bigger image counts as 2), minimum charge $0.052 a run |
+| `scrape_ai_web_scraper` | /api/v1/scrape/ai-web-scraper | $0.019 per page extracted |
+| `scrape_search_results` | /api/v1/scrape/search-results | $0.00017 per search answered; $0.00126 per result page read when readPages is on |
+| `scrape_website_to_markdown` | /api/v1/scrape/website-to-markdown | $0.00099 per page with text |
 | `scrape_website_contacts` | /api/v1/scrape/website-contacts | $0.004 per website with an email or phone found |
 | `find_job_posts` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `scrape_instagram_leads` | /api/v1/scrape/instagram-leads | $0.0023 per profile found by keyword or hashtag, $0.0006 per profile from your own list |
