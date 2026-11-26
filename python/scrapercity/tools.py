@@ -60,7 +60,7 @@ _UTILITY_HANDLERS: Dict[str, Callable] = {
     "query_local_business_database": lambda sc, a: sc.query_local_businesses(
         **_db_params(a, ["hasEmail", "hasPhone", "hasWebsite", "hasContact", "excludeDelivered", "replaceLeftContacts"])),
     "query_ecommerce_database": lambda sc, a: sc.query_ecommerce(
-        **_db_params(a, ["hasEmail", "hasPhone", "hasInstagram", "hasFacebook", "hasTiktok", "excludeDelivered", "replaceLeftContacts"])),
+        **_db_params(a, ["hasEmail", "hasPhone", "hasInstagram", "hasFacebook", "hasTiktok", "hasYoutube", "excludeDelivered", "replaceLeftContacts"])),
 }
 
 

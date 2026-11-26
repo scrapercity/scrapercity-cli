@@ -138,6 +138,17 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | `scrape_website_contacts` | /api/v1/scrape/website-contacts | $0.004 per website with an email or phone found |
 | `find_job_posts` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `scrape_instagram_leads` | /api/v1/scrape/instagram-leads | $0.0023 per profile found by keyword or hashtag, $0.0006 per profile from your own list |
+| `scrape_instagram_posts` | /api/v1/scrape/instagram-posts | $0.0015 per post |
+| `scrape_instagram_comments` | /api/v1/scrape/instagram-comments | $0.0009 per comment |
+| `scrape_instagram_followers` | /api/v1/scrape/instagram-followers | $0.0020 per account |
+| `scrape_facebook_posts` | /api/v1/scrape/facebook-posts | $0.0032 per post |
+| `scrape_facebook_comments` | /api/v1/scrape/facebook-comments | $0.0007 per comment |
+| `scrape_facebook_reviews` | /api/v1/scrape/facebook-reviews | $0.0051 per review |
+| `scrape_facebook_ads` | /api/v1/scrape/facebook-ads | $0.0006 per ad |
+| `scrape_facebook_groups` | /api/v1/scrape/facebook-groups | $0.0051 per post |
+| `scrape_facebook_marketplace` | /api/v1/scrape/facebook-marketplace | $0.0015 per listing |
+| `scrape_facebook_events` | /api/v1/scrape/facebook-events | $0.0259 per event |
+| `scrape_threads_posts` | /api/v1/scrape/threads-posts | $0.0047 per post by keyword, $0.0058 per post from profiles |
 | `find_linkedin_post_engagers` | /api/v1/scrape/linkedin-post-engagers | $0.004 per person |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
