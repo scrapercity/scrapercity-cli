@@ -45,9 +45,10 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
 | `scrape_ucc_filings` | /api/v1/scrape/ucc-filings | $0.0028 per filing |
 | `scrape_facebook_pages` | /api/v1/scrape/facebook-pages | $0.0012 per page from page links, $0.0028 per page from a search |
+| `scrape_cold_email_sender` | /api/v1/scrape/cold-email-sender | $0.0545 per person emailed (the first email plus one follow-up); a preview is free |
 | `scrape_bulk_llm_prompts` | /api/v1/scrape/bulk-llm-prompts | $0.00005 per 1,000 tokens (prompts plus answers, the run's total), minimum charge $0.107 a run |
-| `scrape_ai_for_every_row` | /api/v1/scrape/ai-for-every-row | $0.00012 per 1,000 tokens (each row counts at least 1,000), minimum charge $0.107 a run |
-| `scrape_ai_image_upscaler` | /api/v1/scrape/ai-image-upscaler | $0.0017 per image upscaled, minimum charge $0.058 a run |
+| `scrape_ai_for_every_row` | /api/v1/scrape/ai-for-every-row | $0.0019 per row answered, minimum charge $0.107 a run |
+| `scrape_ai_image_upscaler` | /api/v1/scrape/ai-image-upscaler | $0.019 per image upscaled, minimum charge $0.058 a run |
 | `scrape_ai_image_generator` | /api/v1/scrape/ai-image-generator | $0.0038 per image up to about 1.1 megapixels (a bigger image counts as 2), minimum charge $0.052 a run |
 | `scrape_ai_web_scraper` | /api/v1/scrape/ai-web-scraper | $0.019 per page extracted |
 | `scrape_search_results` | /api/v1/scrape/search-results | $0.00017 per search answered; $0.00126 per result page read when readPages is on |
@@ -66,6 +67,7 @@ Auth: `Authorization: Bearer $SCRAPERCITY_API_KEY` on all requests.
 | `scrape_facebook_marketplace` | /api/v1/scrape/facebook-marketplace | $0.0015 per listing |
 | `scrape_facebook_events` | /api/v1/scrape/facebook-events | $0.0259 per event |
 | `scrape_threads_posts` | /api/v1/scrape/threads-posts | $0.0047 per post by keyword, $0.0058 per post from profiles |
+| `scrape_google_ads` | /api/v1/scrape/google-ads | $0.0001 per ad |
 | `find_linkedin_post_engagers` | /api/v1/scrape/linkedin-post-engagers | $0.004 per person |
 | `find_emails` | /api/v1/scrape/email-finder | $0.05 per email found (FREE if not found) |
 | `find_mobiles` | /api/v1/scrape/mobile-finder | $0.25 per number found (FREE if not found) |
