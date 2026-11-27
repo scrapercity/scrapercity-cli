@@ -153,6 +153,9 @@ Both SDKs carry the same tool list as the MCP server, regenerated from the live 
 | `scrape_company_search` | /api/v1/scrape/company-search | $0.001425 per company |
 | `scrape_company_name_to_domain` | /api/v1/scrape/company-name-to-domain | $0.00076 per website found |
 | `scrape_website_tech_stack_lookup` | /api/v1/scrape/website-tech-stack-lookup | $0.000228 per website found |
+| `scrape_people_search` | /api/v1/scrape/people-search | $0.0049 per person, included on the $149 and $649 plans (up to 100,000 a day) |
+| `scrape_company_employees_finder` | /api/v1/scrape/company-employees-finder | $0.0049 per employee found, included on the $149 and $649 plans (up to 100,000 a day) |
+| `scrape_job_change_checker` | /api/v1/scrape/job-change-checker | $0.02 per replacement found, free on the $649 plan |
 | `scrape_website_contacts` | /api/v1/scrape/website-contacts | $0.004 per website with an email or phone found |
 | `find_job_posts` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `scrape_instagram_leads` | /api/v1/scrape/instagram-leads | $0.0023 per profile found by keyword or hashtag, $0.0006 per profile from your own list |
