@@ -111,7 +111,7 @@ Scrapers charge per result from your credits. The database tools are included wi
 | `scrape_signals` | /api/v1/scrape/signals | $0.0094 per company running ads, $0.0009 per website per platform checked, $0.0043 per company hiring; minimum charge per search |
 | `scrape_ucc_filings` | /api/v1/scrape/ucc-filings | $0.0028 per filing |
 | `scrape_facebook_pages` | /api/v1/scrape/facebook-pages | $0.0012 per page from page links, $0.0028 per page from a search |
-| `scrape_cold_email_sender` | /api/v1/scrape/cold-email-sender | $0.0545 per person emailed (the first email plus one follow-up); a preview is free |
+| `scrape_cold_email_sender` | /api/v1/scrape/cold-email-sender | $0.25 per person emailed (the first email plus one follow-up); a preview is free |
 | `scrape_bulk_llm_prompts` | /api/v1/scrape/bulk-llm-prompts | $0.00005 per 1,000 tokens (prompts plus answers, the run's total), minimum charge $0.107 a run |
 | `scrape_ai_for_every_row` | /api/v1/scrape/ai-for-every-row | $0.0019 per row answered, minimum charge $0.107 a run |
 | `scrape_ai_image_upscaler` | /api/v1/scrape/ai-image-upscaler | $0.019 per image upscaled, minimum charge $0.058 a run |
