@@ -119,6 +119,16 @@ Scrapers charge per result from your credits. The database tools are included wi
 | `scrape_ai_web_scraper` | /api/v1/scrape/ai-web-scraper | $0.019 per page extracted |
 | `scrape_search_results` | /api/v1/scrape/search-results | $0.00017 per search answered; $0.00126 per result page read when readPages is on |
 | `scrape_website_to_markdown` | /api/v1/scrape/website-to-markdown | $0.00099 per page with text |
+| `scrape_reverse_email_lookup` | /api/v1/scrape/reverse-email-lookup | $0.02 per person found, included on the $149 and $649 plans (up to 100,000 a day) |
+| `scrape_personal_to_work_email` | /api/v1/scrape/personal-to-work-email | $0.02 per work email found, included on the $149 and $649 plans (up to 100,000 a day) |
+| `scrape_personal_email_finder` | /api/v1/scrape/personal-email-finder | $0.0475 per personal email found |
+| `scrape_profile_data_lookup` | /api/v1/scrape/profile-data-lookup | $0.02 per profile found, included on the $149 and $649 plans (up to 100,000 a day) |
+| `scrape_profile_url_to_email` | /api/v1/scrape/profile-url-to-email | $0.00095 per email found |
+| `scrape_people_search_by_name` | /api/v1/scrape/people-search-by-name | $0.000579 per person found |
+| `scrape_company_data_by_domain` | /api/v1/scrape/company-data-by-domain | $0.00285 per company found |
+| `scrape_company_search` | /api/v1/scrape/company-search | $0.001425 per company |
+| `scrape_company_name_to_domain` | /api/v1/scrape/company-name-to-domain | $0.00076 per website found |
+| `scrape_website_tech_stack_lookup` | /api/v1/scrape/website-tech-stack-lookup | $0.000228 per website found |
 | `scrape_website_contacts` | /api/v1/scrape/website-contacts | $0.004 per website with an email or phone found |
 | `find_job_posts` | /api/v1/scrape/job-scraper | $0.0009 per job post, decision maker included; minimum charge per search |
 | `scrape_instagram_leads` | /api/v1/scrape/instagram-leads | $0.0023 per profile found by keyword or hashtag, $0.0006 per profile from your own list |
