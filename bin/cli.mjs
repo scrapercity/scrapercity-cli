@@ -381,6 +381,7 @@ async function main() {
                         '--company-country': 'companyCountry', '--company-state': 'companyState',
                         '--company-city': 'companyCity', '--not-title': 'notTitle',
                         '--not-keywords': 'notKeywords', '--not-industry': 'notIndustry',
+                        '--email-status': 'emailStatus',
                         '--technologies': 'technologies', '--technologies-all': 'technologiesAll',
                         '--not-technologies': 'notTechnologies' }
         // List filters take commas: --country "United States,Canada" sends both.
@@ -580,6 +581,7 @@ ScraperCity CLI - B2B lead generation from your terminal
     scrapercity db-leads [filters]           Query lead database
       --title --industry --country --state --city --company --domain --seniority --department
       --min-employees --max-employees --has-email --has-phone
+      --email-status valid   Only people whose email our checker answered valid in the last 90 days
       --keywords --revenue-min --revenue-max --company-country --company-state --company-city
       --not-title --not-keywords --not-industry
       --technologies --technologies-all --not-technologies   Website technologies: any of / all of / none of (comma separated)

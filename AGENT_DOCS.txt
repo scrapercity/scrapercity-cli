@@ -256,6 +256,8 @@ DATABASES (GET; included on the $149/mo plan and up, 100k new records/day; on a 
 GET /api/v1/database/leads?title=CTO&country=United States&hasEmail=true&page=1&limit=100
   Filters: title, industry, country, state, city, companyName, companyDomain,
            seniority, department, hasEmail, hasPhone, minEmployees, maxEmployees, socialUrl
+  emailStatus=valid: only people whose email our checker answered valid in the last 90 days
+           (every lead returned has email_check_status valid; implies hasEmail; same price per lead)
   Company filters: keywords (company tags, whole-word, any match), revenueMin, revenueMax (USD),
            companyCountry, companyState, companyCity (company HQ, not the person)
   Exclusions: notTitle, notKeywords, notIndustry
